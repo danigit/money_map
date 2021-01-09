@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "678639253314",
+    "project_id": "moneymap-70e0a",
+    "storage_bucket": "moneymap-70e0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678639253314:android:4b5e008a3da97b4fcc3adb",
+        "android_client_info": {
+          "package_name": "com.example.moneymap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678639253314-frs2068e4mo2psh39jfou5or8cvhpgcl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9SadVFXu3SxJGlTmMEHq-cLKzoffG7sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678639253314-frs2068e4mo2psh39jfou5or8cvhpgcl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
