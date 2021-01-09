@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#3E77E9</color>
+    <color name="colorPrimaryDark">#3E77E9</color>
+    <color name="colorAccent">#4FC775</color>
+
+    <color name="purple">#644CA2</color>
+    <color name="red_color">#FF5952</color>
+    <color name="yellow_color">#FFD656</color>
+
+    // this are different palettes
+    <color name="dark_blue">#6059F7</color>
+    <color name="light_blue">#6592FE</color>
+    <color name="cyan">#36C3FE</color>
+    <color name="bordeaux">#8E3C77</color>
+    <color name="dark_pink">#C6427B</color>
+    <color name="light_pink">#FE4880</color>
 </resources>
