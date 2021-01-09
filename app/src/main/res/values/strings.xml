@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MONEY MAP</string>
+
+
+    <string name="money_map_title">MONEY MAP</string>
+    <string name="image_logo_label">Application Logo</string>
 </resources>
