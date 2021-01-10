@@ -4,10 +4,13 @@
 
     <string name="money_map_title">MONEY MAP</string>
     <string name="image_logo_label">Application Logo</string>
-    <string name="login_button_text">Already registered? LOGIN HERE</string>
+    <string name="login_button_text">REGISTER HERE</string>
+    <string name="google_signin_text">LOGIN WITH GOOGLE</string>
+    <string name="google_signin_or_text">or</string>
     <string name="register_text">REGISTER</string>
     <string name="login_label">LOGIN</string>
     <string name="insert_email_hint">Insert email</string>
     <string name="insert_password_hint">Insert password</string>
     <string name="reinsert_password_hint">Reinsert password</string>
+    <string name="logout_button_text">LOGOUT</string>
 </resources>
