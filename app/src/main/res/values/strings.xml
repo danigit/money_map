@@ -27,5 +27,15 @@
     <string name="transactions_fragment_text">TransactionsFragment</string>
     <string name="user_fragment_text">UserFragment</string>
     <string name="login_image">Login Image</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="profile_user_name">Name</string>
+    <string name="profile_user_surname">Surname</string>
+    <string name="profile_phone_number">Phone</string>
+    <string name="profile_photo_label">Profile Photo</string>
+    <string name="update_user_informations">Update informations</string>
+    <string name="user_profile_image">User profile image</string>
+    <string name="insert_name_hint">Insert name</string>
+    <string name="insert_surname_hint">Insert surname</string>
+    <string name="insert_phone_hint">Insert phone</string>
 
 </resources>

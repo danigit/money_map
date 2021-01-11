@@ -1,5 +1,9 @@
 package com.example.moneymap;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.RectF;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,5 +20,18 @@ public class Utils {
         matcher = pattern.matcher(password);
 
         return matcher.matches();
+    }
+
+    public static Bitmap scaleImage(Bitmap image, int imageWidth, int imageHeight) {
+        Matrix matrix = new Matrix();
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        RectF firsRect = new RectF(0, 0, width, height);
+        RectF secondRect = new RectF(0, 0, imageWidth, imageHeight);
+
+        matrix .setRectToRect(firsRect, secondRect, Matrix.ScaleToFit.CENTER);
+        return Bitmap.createBitmap(image, 0, 0, width, height, matrix, true);
     }
 }

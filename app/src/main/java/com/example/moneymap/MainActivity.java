@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.moneymap.fragments.AccountFragment;
 import com.example.moneymap.fragments.OverviewFragment;
@@ -27,24 +30,30 @@ public class MainActivity extends AppCompatActivity {
     private TransactionsFragment transactions_fragment;
     private OverviewFragment overview_fragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+
         user_fragment = new UserFragment();
         account_fragment = new AccountFragment();
         transactions_fragment = new TransactionsFragment();
-        overview_fragment = new OverviewFragment();
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
 
-        changeFragment(user_fragment);
+        overview_fragment = new OverviewFragment();
+
+        bottomNavigationView.getMenu().getItem(3).setChecked(true);
+        changeFragment(transactions_fragment);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
 
+        // TODO this is temporary
         Button logout = (Button) findViewById(R.id.logout);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        // this is temporary
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -86,4 +95,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+
 }
