@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ public class Register extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private EditText confirmPassword;
+    private TextView loginLabel;
     private ProgressBar progressBar;
     private Button registerButton;
 
@@ -36,10 +38,12 @@ public class Register extends AppCompatActivity {
         email = (EditText) findViewById(R.id.username_input_field_register);
         password = (EditText) findViewById(R.id.password_input_field_register);
         confirmPassword = (EditText) findViewById(R.id.password_reinsert_input_field);
+        loginLabel = (TextView) findViewById(R.id.go_to_login_label);
         progressBar = (ProgressBar) findViewById(R.id.register_progress);
         registerButton = (Button) findViewById(R.id.register_button);
 
         registerButton.setOnClickListener(handleRegisterUser);
+        loginLabel.setOnClickListener(goToLogin);
     }
 
     private View.OnClickListener handleRegisterUser = new View.OnClickListener() {
@@ -97,6 +101,13 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
+        }
+    };
+
+    private View.OnClickListener goToLogin = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
         }
     };
 }

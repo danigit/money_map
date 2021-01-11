@@ -4,13 +4,28 @@
 
     <string name="money_map_title">MONEY MAP</string>
     <string name="image_logo_label">Application Logo</string>
-    <string name="login_button_text">REGISTER HERE</string>
-    <string name="google_signin_text">LOGIN WITH GOOGLE</string>
+    <string name="login_button_text">REGISTER</string>
+    <string name="google_signin_text">Login with</string>
     <string name="google_signin_or_text">or</string>
     <string name="register_text">REGISTER</string>
     <string name="login_label">LOGIN</string>
     <string name="insert_email_hint">Insert email</string>
     <string name="insert_password_hint">Insert password</string>
     <string name="reinsert_password_hint">Reinsert password</string>
+    <string name="go_to_login_text">LOGIN</string>
+    <string name="already_registered_text">Already registered?</string>
     <string name="logout_button_text">LOGOUT</string>
+    <string name="user_settings">User</string>
+    <string name="account_management">Accounts</string>
+    <string name="add_transaction">Add transaction</string>
+    <string name="transactions">Transactions</string>
+    <string name="overview">Overview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="account_fragment_text">AccountFragment</string>
+    <string name="overview_fragment_text">OverviewFragment</string>
+    <string name="transactions_fragment_text">TransactionsFragment</string>
+    <string name="user_fragment_text">UserFragment</string>
+    <string name="login_image">Login Image</string>
+
 </resources>

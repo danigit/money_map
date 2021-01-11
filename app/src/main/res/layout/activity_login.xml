@@ -111,9 +111,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/google_signin_text"
-            android:textColor="#FF5952"
+            android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/google_login_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="6dp"
+            app:layout_constraintStart_toEndOf="@+id/google_signin_label"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/pngegg"
+            android:contentDescription="@string/login_image" />
 
         <TextView
             android:id="@+id/google_signin_or_label"
@@ -122,7 +132,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/google_signin_or_text"
             android:textColor="#000000"
-            app:layout_constraintStart_toEndOf="@+id/google_signin_label"
+            app:layout_constraintStart_toEndOf="@+id/google_login_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

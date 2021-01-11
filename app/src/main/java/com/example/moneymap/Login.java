@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         setContentView(R.layout.activity_login);
 
         TextView googleLoginText = (TextView) findViewById(R.id.google_signin_label);
+        ImageView googleLoginIcon = (ImageView) findViewById(R.id.google_login_image);
         TextView registerText = (TextView) findViewById(R.id.register_here_label);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -66,6 +68,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
 
         loginButton.setOnClickListener(handleLoginUser);
         googleLoginText.setOnClickListener(handleLoginWithGoogle);
+        googleLoginIcon.setOnClickListener(handleLoginWithGoogle);
         registerText.setOnClickListener(handleRegister);
     }
 
