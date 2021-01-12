@@ -2,19 +2,23 @@ package com.example.moneymap.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,20 +27,25 @@ import android.widget.Toast;
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 
 public class UserFragment extends Fragment {
 
     public static final int CAMERA_PICTURE = 0;
 
+    private Context applicationContext;
     private ImageView userImage;
     private ImageView modifyUserInformation;
     private ImageView saveUserInformation;
-    private EditText profileNameInput;
-    private EditText profileSurnameInput;
-    private EditText profilePhoneInput;
-    private TextView profileNameText;
-    private TextView profileSurnameText;
-    private TextView profilePhoneText;
+    private EditText profileSavingsGoalInput;
+    private EditText profileFixedCostsInput;
+    private EditText profileMaxExpensesInput;
+    private TextView profileSavingsGoalText;
+    private TextView profileFixedCostsText;
+    private TextView profileMaxExpensesText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,17 +58,25 @@ public class UserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        applicationContext = getContext();
+
         userImage = (ImageView) view.findViewById(R.id.profile_image);
-        profileNameInput = (EditText) view.findViewById(R.id.user_name_input_field);
-        profileSurnameInput = (EditText) view.findViewById(R.id.user_surname_input_field);
-        profilePhoneInput = (EditText) view.findViewById(R.id.user_phone_input_field);
-        profileNameText = (TextView) view.findViewById(R.id.profile_name_text_view);
-        profileSurnameText = (TextView) view.findViewById(R.id.profile_surname_text_view);
-        profilePhoneText = (TextView) view.findViewById(R.id.profile_phone_text_view);
+        profileSavingsGoalInput = (EditText) view.findViewById(R.id.user_savings_goal_input_field);
+        profileFixedCostsInput = (EditText) view.findViewById(R.id.user_fixed_costs_input_field);
+        profileMaxExpensesInput = (EditText) view.findViewById(R.id.user_max_expense_input_field);
+        profileSavingsGoalText = (TextView) view.findViewById(R.id.profile_savings_goal_text_view);
+        profileFixedCostsText = (TextView) view.findViewById(R.id.profile_fixed_expenses_text_view);
+        profileMaxExpensesText = (TextView) view.findViewById(R.id.profile_max_expenses_text_view);
         modifyUserInformation = (ImageView) view.findViewById(R.id.modify_user_data_icon);
         saveUserInformation = (ImageView) view.findViewById(R.id.save_user_data_icon);
 
-        Button changeProfileImage = (Button) view.findViewById(R.id.take_profile_image_button);
+        ImageView changeProfileImage = (ImageView) view.findViewById(R.id.take_profile_image_button);
+
+        if (getUserImage() != null) {
+            userImage.setImageBitmap(getUserImage());
+        } else{
+            Utils.showToast(applicationContext, "Unable to find the user image", Toast.LENGTH_SHORT);
+        }
 
         changeProfileImage.setOnClickListener(handleTakePhoto);
         modifyUserInformation.setOnClickListener(handleModifyUserInformation);
@@ -79,13 +96,19 @@ public class UserFragment extends Fragment {
                     if (imageBitmap != null) {
                         Bitmap newBitmap = Utils.scaleImage(imageBitmap, 512, 512);
                         userImage.setImageBitmap(newBitmap);
+
+                        boolean imageSaved = saveUserImage(newBitmap);
+
+                        if (imageSaved){
+                            Utils.showToast(applicationContext, "Image saved to the device", Toast.LENGTH_SHORT);
+                        } else {
+                            Utils.showToast(applicationContext, "Could not save the image", Toast.LENGTH_SHORT);
+                        }
                     } else {
-                        Toast.makeText(getContext(), "Could not take the picture!", Toast.LENGTH_LONG)
-                                .show();
+                        Utils.showToast(applicationContext, "Could not take the picture", Toast.LENGTH_SHORT);
                     }
                 } else{
-                    Toast.makeText(getContext(), "Could not take the picture!", Toast.LENGTH_LONG)
-                            .show();
+                    Utils.showToast(applicationContext, "Could not take the picture!", Toast.LENGTH_SHORT);
                 }
             }
         }
@@ -101,7 +124,8 @@ public class UserFragment extends Fragment {
             } catch (SecurityException e) {
                 requestPermissions(new String[]{
                         Manifest.permission.CAMERA
-                    }, 1);
+                    }, 1
+                );
             }
         }
     };
@@ -109,14 +133,14 @@ public class UserFragment extends Fragment {
     public View.OnClickListener handleModifyUserInformation = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            profileNameText.setVisibility(View.INVISIBLE);
-            profileSurnameText.setVisibility(View.INVISIBLE);
-            profilePhoneText.setVisibility(View.INVISIBLE);
+            profileSavingsGoalText.setVisibility(View.INVISIBLE);
+            profileFixedCostsText.setVisibility(View.INVISIBLE);
+            profileMaxExpensesText.setVisibility(View.INVISIBLE);
             modifyUserInformation.setVisibility(View.INVISIBLE);
 
-            profileNameInput.setVisibility(View.VISIBLE);
-            profileSurnameInput.setVisibility(View.VISIBLE);
-            profilePhoneInput.setVisibility(View.VISIBLE);
+            profileSavingsGoalInput.setVisibility(View.VISIBLE);
+            profileFixedCostsInput.setVisibility(View.VISIBLE);
+            profileMaxExpensesInput.setVisibility(View.VISIBLE);
             saveUserInformation.setVisibility(View.VISIBLE);
         }
     };
@@ -124,15 +148,67 @@ public class UserFragment extends Fragment {
     public View.OnClickListener handleSaveUserInformation = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            profileNameInput.setVisibility(View.INVISIBLE);
-            profileSurnameInput.setVisibility(View.INVISIBLE);
-            profilePhoneInput.setVisibility(View.INVISIBLE);
+            profileSavingsGoalInput.setVisibility(View.INVISIBLE);
+            profileFixedCostsInput.setVisibility(View.INVISIBLE);
+            profileMaxExpensesInput.setVisibility(View.INVISIBLE);
             saveUserInformation.setVisibility(View.INVISIBLE);
 
-            profileNameText.setVisibility(View.VISIBLE);
-            profileSurnameText.setVisibility(View.VISIBLE);
-            profilePhoneText.setVisibility(View.VISIBLE);
+            profileSavingsGoalText.setVisibility(View.VISIBLE);
+            profileFixedCostsText.setVisibility(View.VISIBLE);
+            profileMaxExpensesText.setVisibility(View.VISIBLE);
             modifyUserInformation.setVisibility(View.VISIBLE);
         }
     };
+
+    public boolean saveUserImage(Bitmap image){
+        File fileDirectory = applicationContext.getDir(Utils.applicationDirectory, Context.MODE_PRIVATE);
+        File imageFile = new File(fileDirectory, Utils.userImageName + ".jpeg");
+
+        if(imageFile.exists()) {
+            if(!imageFile.delete())
+                return false;
+        }
+
+        FileOutputStream imageStream = null;
+        try {
+            if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                imageStream = new FileOutputStream(imageFile);
+                if (image != null) {
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, imageStream);
+                    imageStream.flush();
+                    return true;
+                }
+            } else {
+                requestPermissions(new String[] {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1
+                );
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (imageStream != null)
+                    imageStream.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    public Bitmap getUserImage(){
+        Bitmap image = null;
+
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            image = BitmapFactory.decodeFile(applicationContext.getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/" + Utils.userImageName + ".jpeg");
+        } else {
+            requestPermissions(new String[] {
+                Manifest.permission.READ_EXTERNAL_STORAGE},
+            1
+            );
+        }
+        return image;
+    }
 }

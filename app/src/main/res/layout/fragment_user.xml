@@ -15,148 +15,187 @@
             android:id="@+id/profile_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/profile_image_128"
+            android:contentDescription="@string/profile_photo_label"
+            android:src="@drawable/profile_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.060000002"
-            android:contentDescription="@string/profile_photo_label" />
-
-        <Button
-            android:id="@+id/take_profile_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="@string/take_photo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+            app:layout_constraintVertical_bias="0.059" />
 
         <TextView
-            android:id="@+id/profile_user_name_label"
+            android:id="@+id/profile_user_savings_goal_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="100dp"
-            android:text="@string/profile_user_name"
-            android:textSize="18sp"
+            android:text="@string/profile_user_savings_goal_text"
+            android:textColor="#4FC775"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/take_profile_image_button" />
 
         <TextView
-            android:id="@+id/profile_user_surname_label"
+            android:id="@+id/profile_user_fixed_expenses_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/profile_user_surname"
-            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            android:text="@string/profile_user_fixed_costs_text"
+            android:textColor="#AE1D1D"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_user_name_label" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_user_savings_goal_label" />
 
         <TextView
-            android:id="@+id/profile_phone_number"
+            android:id="@+id/profile_max_expenses_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/profile_phone_number"
-            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            android:text="@string/profile_maximum_expenses_text"
+            android:textColor="#AE1D1D"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_user_surname_label" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_user_fixed_expenses_label" />
 
         <TextView
-            android:id="@+id/profile_name_text_view"
+            android:id="@+id/profile_savings_goal_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/zero_value"
+            android:textColor="#4FC775"
             android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_name_label"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/user_savings_goal_input_field"
+            app:layout_constraintEnd_toStartOf="@+id/saving_goals_currency" />
 
         <TextView
-            android:id="@+id/profile_surname_text_view"
+            android:id="@+id/profile_fixed_expenses_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/zero_value"
+            android:textColor="#AE1D1D"
             android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_surname_label"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/user_fixed_costs_input_field"
+            app:layout_constraintEnd_toStartOf="@+id/fixed_costs_currency" />
 
         <TextView
-            android:id="@+id/profile_phone_text_view"
+            android:id="@+id/profile_max_expenses_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/zero_value"
+            android:textColor="#AE1D1D"
             android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_phone_number"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/user_max_expense_input_field"
+            app:layout_constraintEnd_toStartOf="@+id/maximum_expenses_currency" />
 
         <ImageView
             android:id="@+id/modify_user_data_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:contentDescription="@string/user_profile_image"
             android:src="@drawable/update_user_data"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_phone_number"
-            android:contentDescription="@string/user_profile_image" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_max_expenses_label" />
 
         <ImageView
             android:id="@+id/save_user_data_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:contentDescription="@string/user_profile_image"
+            android:contentDescription="@string/update_user_information"
             android:src="@drawable/save_user_data_icon"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_phone_number" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_max_expenses_label" />
 
         <EditText
-            android:id="@+id/user_name_input_field"
+            android:id="@+id/user_savings_goal_input_field"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/insert_savings_goal_hint"
+            android:ems="10"
+            android:hint="@string/insert_savings_goal_hint"
+            android:inputType="numberDecimal"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_savings_goal_label"
+            app:layout_constraintEnd_toEndOf="@+id/profile_savings_goal_text_view" />
+
+        <EditText
+            android:id="@+id/user_fixed_costs_input_field"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/insert_savings_goal_hint"
+            android:ems="10"
+            android:hint="@string/insert_savings_goal_hint"
+            android:inputType="numberDecimal"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_fixed_expenses_label"
+            app:layout_constraintEnd_toEndOf="@+id/profile_fixed_expenses_text_view" />
+
+        <EditText
+            android:id="@+id/user_max_expense_input_field"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/insert_maximum_expenses_hint"
+            android:ems="10"
+            android:hint="@string/insert_maximum_expenses_hint"
+            android:inputType="numberDecimal"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profile_max_expenses_label"
+            app:layout_constraintEnd_toEndOf="@+id/profile_max_expenses_text_view" />
+
+        <TextView
+            android:id="@+id/saving_goals_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:autofillHints="@string/insert_name_hint"
-            android:ems="10"
-            android:hint="@string/insert_name_hint"
-            android:inputType="textPersonName"
-            android:textSize="14sp"
-            android:visibility="invisible"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_name_label"
+            android:text="@string/currency"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profile_savings_goal_text_view"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/user_surname_input_field"
+        <TextView
+            android:id="@+id/fixed_costs_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:autofillHints="@string/insert_surname_hint"
-            android:ems="10"
-            android:hint="@string/insert_surname_hint"
-            android:inputType="textPersonName"
-            android:textSize="14sp"
-            android:visibility="invisible"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_surname_label"
+            android:text="@string/currency"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/user_fixed_costs_input_field"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/user_phone_input_field"
+        <TextView
+            android:id="@+id/maximum_expenses_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:autofillHints="@string/insert_phone_hint"
-            android:ems="10"
-            android:hint="@string/insert_phone_hint"
-            android:inputType="phone"
-            android:textSize="14sp"
-            android:visibility="invisible"
-            app:layout_constraintBaseline_toBaselineOf="@+id/profile_phone_number"
+            android:text="@string/currency"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profile_max_expenses_text_view"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/take_profile_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/take_photo_icon"
+            android:src="@drawable/take_photo_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

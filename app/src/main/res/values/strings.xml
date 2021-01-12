@@ -28,14 +28,17 @@
     <string name="user_fragment_text">UserFragment</string>
     <string name="login_image">Login Image</string>
     <string name="take_photo">Take Photo</string>
-    <string name="profile_user_name">Name</string>
-    <string name="profile_user_surname">Surname</string>
-    <string name="profile_phone_number">Phone</string>
+    <string name="profile_user_savings_goal_text">Savings goal</string>
+    <string name="profile_user_fixed_costs_text">Fixed costs</string>
+    <string name="profile_maximum_expenses_text">Maximum expenses</string>
     <string name="profile_photo_label">Profile Photo</string>
-    <string name="update_user_informations">Update informations</string>
+    <string name="update_user_information">Update information</string>
     <string name="user_profile_image">User profile image</string>
-    <string name="insert_name_hint">Insert name</string>
-    <string name="insert_surname_hint">Insert surname</string>
-    <string name="insert_phone_hint">Insert phone</string>
+    <string name="insert_savings_goal_hint">0</string>
+    <string name="insert_fixed_costs_hint">0</string>
+    <string name="insert_maximum_expenses_hint">0</string>
+    <string name="zero_value">0</string>
+    <string name="currency">$</string>
+    <string name="take_photo_icon">Take Photo Icon</string>
 
 </resources>
