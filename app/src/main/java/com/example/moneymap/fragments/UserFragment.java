@@ -26,15 +26,25 @@ import android.widget.Toast;
 
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class UserFragment extends Fragment {
 
-    public static final int CAMERA_PICTURE = 0;
+    private static final int CAMERA_PICTURE = 0;
+    private String applicationPath;
 
     private Context applicationContext;
     private ImageView userImage;
@@ -46,6 +56,8 @@ public class UserFragment extends Fragment {
     private TextView profileSavingsGoalText;
     private TextView profileFixedCostsText;
     private TextView profileMaxExpensesText;
+
+    private String[] userInfoFields;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +71,7 @@ public class UserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         applicationContext = getContext();
+        applicationPath = applicationContext.getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/";
 
         userImage = (ImageView) view.findViewById(R.id.profile_image);
         profileSavingsGoalInput = (EditText) view.findViewById(R.id.user_savings_goal_input_field);
@@ -69,6 +82,10 @@ public class UserFragment extends Fragment {
         profileMaxExpensesText = (TextView) view.findViewById(R.id.profile_max_expenses_text_view);
         modifyUserInformation = (ImageView) view.findViewById(R.id.modify_user_data_icon);
         saveUserInformation = (ImageView) view.findViewById(R.id.save_user_data_icon);
+
+        if(!loadUserData()){
+            Utils.showToast(applicationContext, "Unable to load user data", Toast.LENGTH_SHORT);
+        }
 
         ImageView changeProfileImage = (ImageView) view.findViewById(R.id.take_profile_image_button);
 
@@ -138,6 +155,13 @@ public class UserFragment extends Fragment {
             profileMaxExpensesText.setVisibility(View.INVISIBLE);
             modifyUserInformation.setVisibility(View.INVISIBLE);
 
+            Map<String, String> userData = getUserData();
+            if (userData != null){
+                profileSavingsGoalInput.setText(userData.get("savings"));
+                profileFixedCostsInput.setText(userData.get("fixed"));
+                profileMaxExpensesInput.setText(userData.get("maximum"));
+            }
+
             profileSavingsGoalInput.setVisibility(View.VISIBLE);
             profileFixedCostsInput.setVisibility(View.VISIBLE);
             profileMaxExpensesInput.setVisibility(View.VISIBLE);
@@ -153,10 +177,25 @@ public class UserFragment extends Fragment {
             profileMaxExpensesInput.setVisibility(View.INVISIBLE);
             saveUserInformation.setVisibility(View.INVISIBLE);
 
+            String [] userData = {
+                profileSavingsGoalInput.getText().toString(),
+                profileFixedCostsInput.getText().toString(),
+                profileMaxExpensesInput.getText().toString()
+            };
+
+            userInfoFields = new String[]{"savings", "fixed", "maximum"};
+
+            if (!saveDataToJson(userData, userInfoFields)){
+                Utils.showToast(applicationContext, "Unable to save data permanently", Toast.LENGTH_SHORT);
+            }
+
+            loadUserData();
+
             profileSavingsGoalText.setVisibility(View.VISIBLE);
             profileFixedCostsText.setVisibility(View.VISIBLE);
             profileMaxExpensesText.setVisibility(View.VISIBLE);
             modifyUserInformation.setVisibility(View.VISIBLE);
+
         }
     };
 
@@ -202,7 +241,7 @@ public class UserFragment extends Fragment {
         Bitmap image = null;
 
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            image = BitmapFactory.decodeFile(applicationContext.getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/" + Utils.userImageName + ".jpeg");
+            image = BitmapFactory.decodeFile(applicationPath + Utils.userImageName + ".jpeg");
         } else {
             requestPermissions(new String[] {
                 Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -210,5 +249,60 @@ public class UserFragment extends Fragment {
             );
         }
         return image;
+    }
+
+    public boolean saveDataToJson(String[] userData, String[] fields){
+        Map<String, String> jsonData = new HashMap<>();
+
+        for (int i = 0; i < userData.length; i++){
+            jsonData.put(fields[i], userData[i]);
+        }
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(jsonData);
+
+        FileOutputStream outputStream;
+        try {
+            outputStream = applicationContext.openFileOutput( Utils.jsonUserDataFile + ".json", Context.MODE_PRIVATE);
+            outputStream.write(jsonString.getBytes());
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Map<String, String> getUserData(){
+        try {
+            FileInputStream fileInputStream = applicationContext.openFileInput(Utils.jsonUserDataFile + ".json");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                stringBuilder.append(line);
+            }
+
+            String jsonString = stringBuilder.toString();
+
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean loadUserData(){
+        Map<String, String> userData = getUserData();
+        if (userData != null){
+            profileSavingsGoalText.setText(userData.get("savings"));
+            profileFixedCostsText.setText(userData.get("fixed"));
+            profileMaxExpensesText.setText(userData.get("maximum"));
+            return true;
+        }
+        return false;
     }
 }
