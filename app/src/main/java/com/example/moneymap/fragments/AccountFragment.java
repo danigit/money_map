@@ -5,11 +5,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
 /**
@@ -28,6 +31,11 @@ import com.google.firebase.database.ValueEventListener;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
+
+    private SlidingUpPanelLayout slidingLayout;
+    private Button btnShow;
+    private Button btnHide;
+    private TextView textView;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -43,16 +51,16 @@ public class AccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final int[] i = {0};
-        ImageView addAccount = (ImageView) view.findViewById(R.id.add_account_image_button);
-        addAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(Utils.TAG, "Button clicked");
-                Account account = new Account("finecobank" +i[0]++, "This is a fineco account", 10000);
-                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
-                accountsReference.child("fineco" + i[0]).setValue(account);
-            }
-        });
+//        addAccount.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(Utils.TAG, "Button clicked");
+//                Account account = new Account("finecobank" +i[0]++, "This is a fineco account", 10000);
+//                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+//                accountsReference.child("fineco" + i[0]).setValue(account);
+//                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+//            }
+//        });
 
         final LinearLayout accounts_layout = (LinearLayout) view.findViewById(R.id.accounts_layout);
 
@@ -81,8 +89,62 @@ public class AccountFragment extends Fragment {
 
             }
         });
+
+        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        slidingLayout.setPanelSlideListener(onSlideListener());
     }
 
+    /**
+     * Request show sliding layout when clicked
+     * @return
+     */
+    private View.OnClickListener onShowListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //show sliding layout in bottom of screen (not expand it)
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        };
+    }
+
+    /**
+     * Hide sliding layout when click button
+     * @return
+     */
+    private View.OnClickListener onHideListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //hide sliding layout
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        };
+    }
+
+    private SlidingUpPanelLayout.PanelSlideListener onSlideListener() {
+        return new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+            }
+        };
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
