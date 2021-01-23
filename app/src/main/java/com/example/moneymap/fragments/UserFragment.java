@@ -29,16 +29,10 @@ import com.example.moneymap.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class UserFragment extends Fragment {
@@ -56,8 +50,6 @@ public class UserFragment extends Fragment {
     private TextView profileSavingsGoalText;
     private TextView profileFixedCostsText;
     private TextView profileMaxExpensesText;
-
-    private String[] userInfoFields;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,10 +75,6 @@ public class UserFragment extends Fragment {
         modifyUserInformation = (ImageView) view.findViewById(R.id.modify_user_data_icon);
         saveUserInformation = (ImageView) view.findViewById(R.id.save_user_data_icon);
 
-        if(!loadUserData()){
-            Utils.showToast(applicationContext, "Unable to load user data", Toast.LENGTH_SHORT);
-        }
-
         ImageView changeProfileImage = (ImageView) view.findViewById(R.id.take_profile_image_button);
 
         if (getUserImage() != null) {
@@ -98,6 +86,21 @@ public class UserFragment extends Fragment {
         changeProfileImage.setOnClickListener(handleTakePhoto);
         modifyUserInformation.setOnClickListener(handleModifyUserInformation);
         saveUserInformation.setOnClickListener(handleSaveUserInformation);
+
+        Utils.databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(Utils.TAG, snapshot.child("fixed_costs").getValue().toString());
+                profileSavingsGoalText.setText(snapshot.child("savings_goal").getValue().toString());
+                profileFixedCostsText.setText(snapshot.child("fixed_costs").getValue().toString());
+                profileMaxExpensesText.setText(snapshot.child("max_expense").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Utils.showToast(applicationContext, "Unable to retrieve the data", Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     @Override
@@ -180,24 +183,9 @@ public class UserFragment extends Fragment {
             profileMaxExpensesInput.setVisibility(View.INVISIBLE);
             saveUserInformation.setVisibility(View.INVISIBLE);
 
-            Utils.database.child("savings_goal").setValue(profileSavingsGoalInput.getText().toString());
-            Utils.database.child("fixed_costs").setValue(profileFixedCostsInput.getText().toString());
-            Utils.database.child("max_expense").setValue(profileMaxExpensesInput.getText().toString());
-
-            Utils.database.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d(Utils.TAG, snapshot.child("fixed_costs").getValue().toString());
-                    profileSavingsGoalText.setText(snapshot.child("savings_goal").getValue().toString());
-                    profileFixedCostsText.setText(snapshot.child("fixed_costs").getValue().toString());
-                    profileMaxExpensesText.setText(snapshot.child("max_expense").getValue().toString());
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Utils.showToast(applicationContext, "Unable to retrieve the data", Toast.LENGTH_SHORT);
-                }
-            });
+            Utils.databaseReference.child("savings_goal").setValue(profileSavingsGoalInput.getText().toString());
+            Utils.databaseReference.child("fixed_costs").setValue(profileFixedCostsInput.getText().toString());
+            Utils.databaseReference.child("max_expense").setValue(profileMaxExpensesInput.getText().toString());
 
             profileSavingsGoalText.setVisibility(View.VISIBLE);
             profileFixedCostsText.setVisibility(View.VISIBLE);
@@ -206,6 +194,10 @@ public class UserFragment extends Fragment {
 
         }
     };
+
+    public void loadUserData(){
+
+    }
 
     public boolean saveUserImage(Bitmap image){
         File fileDirectory = applicationContext.getDir(Utils.applicationDirectory, Context.MODE_PRIVATE);
@@ -257,60 +249,5 @@ public class UserFragment extends Fragment {
             );
         }
         return image;
-    }
-
-    public boolean saveDataToJson(String[] userData, String[] fields){
-        Map<String, String> jsonData = new HashMap<>();
-
-        for (int i = 0; i < userData.length; i++){
-            jsonData.put(fields[i], userData[i]);
-        }
-
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(jsonData);
-
-        FileOutputStream outputStream;
-        try {
-            outputStream = applicationContext.openFileOutput( Utils.jsonUserDataFile + ".json", Context.MODE_PRIVATE);
-            outputStream.write(jsonString.getBytes());
-            outputStream.flush();
-            outputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public Map<String, String> getUserData(){
-        try {
-            FileInputStream fileInputStream = applicationContext.openFileInput(Utils.jsonUserDataFile + ".json");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while((line = bufferedReader.readLine()) != null){
-                stringBuilder.append(line);
-            }
-
-            String jsonString = stringBuilder.toString();
-
-            Gson gson = new Gson();
-            return gson.fromJson(jsonString, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean loadUserData(){
-        Map<String, String> userData = getUserData();
-        if (userData != null){
-            profileSavingsGoalText.setText(userData.get("savings"));
-            profileFixedCostsText.setText(userData.get("fixed"));
-            profileMaxExpensesText.setText(userData.get("maximum"));
-            return true;
-        }
-        return false;
     }
 }

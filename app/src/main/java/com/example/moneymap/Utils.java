@@ -17,8 +17,9 @@ public class Utils {
     public final static String TAG = "money_map";
     public final static String applicationDirectory = "MoneyMap";
     public final static String userImageName = "user_image";
-    public final static String jsonUserDataFile = "user_data";
-    public final static DatabaseReference database = FirebaseDatabase.getInstance("https://moneymap-70e0a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+    public final static FirebaseDatabase database = FirebaseDatabase.getInstance("https://moneymap-70e0a-default-rtdb.europe-west1.firebasedatabase.app");
+    public final static DatabaseReference databaseReference = database.getReference();
+
 
     public static boolean validatePassword(String password){
         Pattern pattern;

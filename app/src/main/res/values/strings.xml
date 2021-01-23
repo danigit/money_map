@@ -41,5 +41,8 @@
     <string name="currency">$</string>
     <string name="take_photo_icon">Take Photo Icon</string>
     <string name="account_row_image">Account image</string>
+    <string name="accounts_total_label">All accounts</string>
+    <string name="add_account_image">Add account</string>
+
 
 </resources>

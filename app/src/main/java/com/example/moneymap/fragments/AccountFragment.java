@@ -1,41 +1,27 @@
 package com.example.moneymap.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.contentcapture.DataRemovalRequest;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.moneymap.Account;
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.io.FileOutputStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,25 +39,29 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://moneymap-70e0a-default-rtdb.europe-west1.firebasedatabase.app");
-        database.setPersistenceEnabled(true);
-
-        DatabaseReference databaseReference = database.getReference();
-        Account account = new Account("finecobank", "This is a fineco account", 10000);
-        DatabaseReference accountsReference = databaseReference.child("accounts");
-        accountsReference.child("fineco").setValue(account);
+        final int[] i = {0};
+        ImageView addAccount = (ImageView) view.findViewById(R.id.add_account_image_button);
+        addAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(Utils.TAG, "Button clicked");
+                Account account = new Account("finecobank" +i[0]++, "This is a fineco account", 10000);
+                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                accountsReference.child("fineco" + i[0]).setValue(account);
+            }
+        });
 
         final LinearLayout accounts_layout = (LinearLayout) view.findViewById(R.id.accounts_layout);
 
-        Utils.database.child("accounts").addValueEventListener(new ValueEventListener() {
+        Utils.databaseReference.child("accounts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double accountsTotal = 0;
+                accounts_layout.removeAllViews();
                 for (DataSnapshot child: snapshot.getChildren()){
-                    LinearLayout a = new LinearLayout(getContext());
-                    a.setOrientation(LinearLayout.HORIZONTAL);
                     View layout = LayoutInflater.from(getContext()).inflate(R.layout.account_row, null);
                     TextView title =  layout.findViewById(R.id.account_title);
                     title.setText(child.child("title").getValue().toString());
@@ -79,9 +69,11 @@ public class AccountFragment extends Fragment {
                     description.setText(child.child("description").getValue().toString());
                     TextView amount =  layout.findViewById(R.id.account_amount);
                     amount.setText(child.child("amount").getValue().toString());
-                    a.addView(layout);
-                    accounts_layout.addView(a);
+                    accountsTotal += child.child("amount").getValue(Double.class);
+                    accounts_layout.addView(layout);
                 }
+                TextView allAccountsTotal = (TextView) view.findViewById(R.id.all_accounts_total);
+                allAccountsTotal.setText(String.valueOf(accountsTotal));
             }
 
             @Override
