@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "678639253314",
+    "firebase_url": "https://moneymap-70e0a-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "moneymap-70e0a",
     "storage_bucket": "moneymap-70e0a.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "678639253314-e67e9b3u2hjpm0ts7jkub5i2bgj1srb6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.moneymap",
+            "certificate_hash": "705df8f2760a2eaafa727e0c3d34e3af5da8fa64"
+          }
+        },
         {
           "client_id": "678639253314-frs2068e4mo2psh39jfou5or8cvhpgcl.apps.googleusercontent.com",
           "client_type": 3

@@ -6,6 +6,9 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +18,7 @@ public class Utils {
     public final static String applicationDirectory = "MoneyMap";
     public final static String userImageName = "user_image";
     public final static String jsonUserDataFile = "user_data";
+    public final static DatabaseReference database = FirebaseDatabase.getInstance("https://moneymap-70e0a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
 
     public static boolean validatePassword(String password){
         Pattern pattern;

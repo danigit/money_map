@@ -40,5 +40,6 @@
     <string name="zero_value">0</string>
     <string name="currency">$</string>
     <string name="take_photo_icon">Take Photo Icon</string>
+    <string name="account_row_image">Account image</string>
 
 </resources>

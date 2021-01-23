@@ -1,0 +1,1 @@
+problem with database connection: for non US servers I have to pass the connection string

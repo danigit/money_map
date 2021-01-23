@@ -26,19 +26,19 @@ import android.widget.Toast;
 
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class UserFragment extends Fragment {
@@ -104,6 +104,8 @@ public class UserFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode, resultCode, result);
 
+
+
         if (requestCode == CAMERA_PICTURE){
             if (resultCode == Activity.RESULT_OK){
                 final Bundle cameraImage = result.getExtras();
@@ -111,7 +113,15 @@ public class UserFragment extends Fragment {
                     final Bitmap imageBitmap = (Bitmap) cameraImage.get("data");
 
                     if (imageBitmap != null) {
-                        Bitmap newBitmap = Utils.scaleImage(imageBitmap, 512, 512);
+                        Bitmap newBitmap;
+                        float density = getResources().getDisplayMetrics().density;
+
+                        if (density <= 2) {
+                            newBitmap = Utils.scaleImage(imageBitmap, 150, 150);
+                        } else {
+                            newBitmap = Utils.scaleImage(imageBitmap, 450, 450);
+                        }
+
                         userImage.setImageBitmap(newBitmap);
 
                         boolean imageSaved = saveUserImage(newBitmap);
@@ -155,13 +165,6 @@ public class UserFragment extends Fragment {
             profileMaxExpensesText.setVisibility(View.INVISIBLE);
             modifyUserInformation.setVisibility(View.INVISIBLE);
 
-            Map<String, String> userData = getUserData();
-            if (userData != null){
-                profileSavingsGoalInput.setText(userData.get("savings"));
-                profileFixedCostsInput.setText(userData.get("fixed"));
-                profileMaxExpensesInput.setText(userData.get("maximum"));
-            }
-
             profileSavingsGoalInput.setVisibility(View.VISIBLE);
             profileFixedCostsInput.setVisibility(View.VISIBLE);
             profileMaxExpensesInput.setVisibility(View.VISIBLE);
@@ -177,19 +180,24 @@ public class UserFragment extends Fragment {
             profileMaxExpensesInput.setVisibility(View.INVISIBLE);
             saveUserInformation.setVisibility(View.INVISIBLE);
 
-            String [] userData = {
-                profileSavingsGoalInput.getText().toString(),
-                profileFixedCostsInput.getText().toString(),
-                profileMaxExpensesInput.getText().toString()
-            };
+            Utils.database.child("savings_goal").setValue(profileSavingsGoalInput.getText().toString());
+            Utils.database.child("fixed_costs").setValue(profileFixedCostsInput.getText().toString());
+            Utils.database.child("max_expense").setValue(profileMaxExpensesInput.getText().toString());
 
-            userInfoFields = new String[]{"savings", "fixed", "maximum"};
+            Utils.database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d(Utils.TAG, snapshot.child("fixed_costs").getValue().toString());
+                    profileSavingsGoalText.setText(snapshot.child("savings_goal").getValue().toString());
+                    profileFixedCostsText.setText(snapshot.child("fixed_costs").getValue().toString());
+                    profileMaxExpensesText.setText(snapshot.child("max_expense").getValue().toString());
+                }
 
-            if (!saveDataToJson(userData, userInfoFields)){
-                Utils.showToast(applicationContext, "Unable to save data permanently", Toast.LENGTH_SHORT);
-            }
-
-            loadUserData();
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Utils.showToast(applicationContext, "Unable to retrieve the data", Toast.LENGTH_SHORT);
+                }
+            });
 
             profileSavingsGoalText.setVisibility(View.VISIBLE);
             profileFixedCostsText.setVisibility(View.VISIBLE);

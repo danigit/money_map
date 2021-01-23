@@ -15,10 +15,10 @@
             android:id="@+id/profile_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/profile_photo_label"
             android:src="@drawable/profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,21 +26,22 @@
             android:id="@+id/take_profile_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/take_photo_icon"
             android:src="@drawable/take_photo_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-            app:layout_constraintStart_toEndOf="@+id/profile_image" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
         <TextView
             android:id="@+id/profile_user_savings_goal_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="50dp"
             android:text="@string/profile_user_savings_goal_text"
             android:textColor="#4FC775"
-            android:textSize="20sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/take_profile_image_button" />
 
@@ -52,7 +53,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/profile_user_fixed_costs_text"
             android:textColor="#FFD656"
-            android:textSize="20sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_user_savings_goal_label" />
 
@@ -64,7 +65,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/profile_maximum_expenses_text"
             android:textColor="#AE1D1D"
-            android:textSize="20sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_user_fixed_expenses_label" />
 
@@ -75,7 +76,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/zero_value"
             android:textColor="#4FC775"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/user_savings_goal_input_field"
             app:layout_constraintEnd_toStartOf="@+id/saving_goals_currency" />
 
@@ -86,7 +87,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/zero_value"
             android:textColor="#FFD656"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/user_fixed_costs_input_field"
             app:layout_constraintEnd_toStartOf="@+id/fixed_costs_currency" />
 
@@ -97,7 +98,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/zero_value"
             android:textColor="#AE1D1D"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/user_max_expense_input_field"
             app:layout_constraintEnd_toStartOf="@+id/maximum_expenses_currency" />
 
@@ -109,7 +110,7 @@
             android:ems="10"
             android:hint="@string/insert_savings_goal_hint"
             android:inputType="numberDecimal"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             android:visibility="invisible"
             app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_savings_goal_label"
             app:layout_constraintEnd_toEndOf="@+id/profile_savings_goal_text_view" />
@@ -122,7 +123,7 @@
             android:ems="10"
             android:hint="@string/insert_savings_goal_hint"
             android:inputType="numberDecimal"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             android:visibility="invisible"
             app:layout_constraintBaseline_toBaselineOf="@+id/profile_user_fixed_expenses_label"
             app:layout_constraintEnd_toEndOf="@+id/profile_fixed_expenses_text_view" />
@@ -135,7 +136,7 @@
             android:ems="10"
             android:hint="@string/insert_maximum_expenses_hint"
             android:inputType="numberDecimal"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             android:visibility="invisible"
             app:layout_constraintBaseline_toBaselineOf="@+id/profile_max_expenses_label"
             app:layout_constraintEnd_toEndOf="@+id/profile_max_expenses_text_view" />
@@ -146,7 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="@string/currency"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/profile_savings_goal_text_view"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -156,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="@string/currency"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/user_fixed_costs_input_field"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -166,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="@string/currency"
-            android:textSize="18sp"
+            android:textSize="@dimen/normal_size"
             app:layout_constraintBaseline_toBaselineOf="@+id/profile_max_expenses_text_view"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -175,11 +176,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
             android:contentDescription="@string/update_user_information"
             android:src="@drawable/save_user_data_icon"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_max_expenses_label" />
 
         <ImageView
