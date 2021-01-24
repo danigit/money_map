@@ -47,6 +47,18 @@
     <string name="add_account_description_input">Insert description</string>
     <string name="add_account_amount_input">Insert initial amount</string>
     <string name="save_account_button">Save Account</string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="comma">,</string>
+    <string name="insert_transaction">Insert</string>
 
 
 </resources>

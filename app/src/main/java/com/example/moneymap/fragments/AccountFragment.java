@@ -101,7 +101,6 @@ public class AccountFragment extends Fragment {
         });
 
         slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
-        slidingLayout.setPanelSlideListener(onSlideListener());
     }
 
     /**

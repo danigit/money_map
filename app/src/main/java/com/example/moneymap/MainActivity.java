@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.example.moneymap.fragments.AccountFragment;
 import com.example.moneymap.fragments.OverviewFragment;
@@ -18,6 +20,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.account_management:
                     changeFragment(account_fragment);
                     break;
+                case R.id.add_transaction:
+                    addTransaction();
+                    break;
                 case R.id.transactions:
                     changeFragment(transactions_fragment);
                     break;
@@ -96,5 +108,59 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public void addTransaction(){
+        SlidingUpPanelLayout slidingLayout;
+        slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
+        Utils.databaseReference.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                final List<String> categoriesList = new ArrayList<String>();
+
+                for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
+                    String propertyAddress = addressSnapshot.getValue(String.class);
+                    if (propertyAddress!=null){
+                        categoriesList.add(propertyAddress);
+                    }
+                }
+
+                Spinner spinnerProperty = (Spinner) findViewById(R.id.categories_spinner);
+                ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_item, categoriesList);
+                addressAdapter.setDropDownViewResource(R.layout.spinner_item);
+                spinnerProperty.setAdapter(addressAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        Utils.databaseReference.child("accounts").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                final List<String> accountsList = new ArrayList<String>();
+
+                for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
+                    String propertyAddress = addressSnapshot.child("title").getValue(String.class);
+                    if (propertyAddress!=null){
+                        accountsList.add(propertyAddress);
+                    }
+                }
+
+                Spinner spinnerProperty = (Spinner) findViewById(R.id.account_spinner);
+                ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_item, accountsList);
+                addressAdapter.setDropDownViewResource(R.layout.spinner_item);
+                spinnerProperty.setAdapter(addressAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+    }
 }
