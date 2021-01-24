@@ -1,5 +1,6 @@
 package com.example.moneymap.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,9 +36,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 public class AccountFragment extends Fragment {
 
     private SlidingUpPanelLayout slidingLayout;
-    private Button btnShow;
-    private Button btnHide;
-    private TextView textView;
+    private TextView accountName;
+    private TextView accountDescription;
+    private TextView accountAmount;
+    private Button saveAccountButton;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -50,17 +54,23 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final int[] i = {0};
-//        addAccount.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(Utils.TAG, "Button clicked");
-//                Account account = new Account("finecobank" +i[0]++, "This is a fineco account", 10000);
-//                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
-//                accountsReference.child("fineco" + i[0]).setValue(account);
+        accountName = (TextView) view.findViewById(R.id.account_title_input);
+        accountDescription = (TextView) view.findViewById(R.id.account_description_input);
+        accountAmount = (TextView) view.findViewById(R.id.account_amount_input);
+        saveAccountButton = (Button) view.findViewById(R.id.save_account_button);
+
+        saveAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Account account = new Account(accountName.getText().toString(), accountDescription.getText().toString(), Double.parseDouble(accountAmount.getText().toString()));
+                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                accountsReference.child(accountName.getText().toString()).setValue(account);
+                InputMethodManager imm = (InputMethodManager) ((Activity)getContext()).getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 //                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-//            }
-//        });
+            }
+        });
 
         final LinearLayout accounts_layout = (LinearLayout) view.findViewById(R.id.accounts_layout);
 

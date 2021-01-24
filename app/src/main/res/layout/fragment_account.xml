@@ -5,14 +5,13 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="20dp"
     android:background="#FFFFFF"
     android:gravity="bottom"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="parent"
     app:umanoDragView="@+id/dragView"
     app:umanoOverlay="true"
-    app:umanoPanelHeight="68dp"
+    app:umanoPanelHeight="100dp"
     app:umanoParalaxOffset="100dp"
     app:umanoShadowHeight="4dp"
     tools:context=".fragments.AccountFragment">
@@ -64,18 +63,85 @@
                 android:orientation="vertical"></LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <!-- SLIDING LAYOUT -->
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <TextView
+            android:id="@+id/add_account_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_account_button"
+            android:textSize="@dimen/small_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/account_title_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_weight="1"
-            android:src="@drawable/add_expense" />
-    </LinearLayout>
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/add_account_name_input"
+            android:autofillHints=""
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_account_image_button" />
+
+        <EditText
+            android:id="@+id/account_description_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/add_account_description_input"
+            android:autofillHints=""
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/account_title_input" />
+
+        <EditText
+            android:id="@+id/account_amount_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="@string/add_account_amount_input"
+            android:autofillHints=""
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/account_description_input" />
+
+        <Button
+            android:id="@+id/save_account_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/save_account_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/account_amount_input" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- SLIDING LAYOUT -->
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

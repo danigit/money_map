@@ -42,7 +42,11 @@
     <string name="take_photo_icon">Take Photo Icon</string>
     <string name="account_row_image">Account image</string>
     <string name="accounts_total_label">All accounts</string>
-    <string name="add_account_image">Add account</string>
+    <string name="add_account_button">ADD</string>
+    <string name="add_account_name_input">Insert Name</string>
+    <string name="add_account_description_input">Insert description</string>
+    <string name="add_account_amount_input">Insert initial amount</string>
+    <string name="save_account_button">Save Account</string>
 
 
 </resources>
