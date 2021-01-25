@@ -12,7 +12,6 @@
     app:umanoDragView="@+id/dragView"
     app:umanoOverlay="true"
     app:umanoPanelHeight="0dp"
-    app:umanoParalaxOffset="10dp"
     app:umanoShadowHeight="4dp"
     tools:context=".fragments.AccountFragment">
 
@@ -254,9 +253,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/insert_transaction"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cancel_transaction_button"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/zero_button" />
+
+            <Button
+                android:id="@+id/cancel_transaction_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel_transaction_button_label"
+                app:layout_constraintBaseline_toBaselineOf="@+id/insert_transaction_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/insert_transaction_button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

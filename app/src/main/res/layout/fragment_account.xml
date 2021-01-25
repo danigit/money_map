@@ -12,7 +12,6 @@
     app:umanoDragView="@+id/dragView"
     app:umanoOverlay="true"
     app:umanoPanelHeight="100dp"
-    app:umanoParalaxOffset="100dp"
     app:umanoShadowHeight="4dp"
     tools:context=".fragments.AccountFragment">
 

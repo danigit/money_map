@@ -6,6 +6,10 @@ public class Transaction {
     public String note;
     public String amount;
 
+    public Transaction(){
+
+    }
+
     public Transaction(String account, String category, String note, String amount){
         this.account = account;
         this.category = category;

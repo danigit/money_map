@@ -131,29 +131,6 @@ public class AccountFragment extends Fragment {
         };
     }
 
-    private SlidingUpPanelLayout.PanelSlideListener onSlideListener() {
-        return new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View view, float v) {
-            }
-
-            @Override
-            public void onPanelCollapsed(View view) {
-            }
-
-            @Override
-            public void onPanelExpanded(View view) {
-            }
-
-            @Override
-            public void onPanelAnchored(View view) {
-            }
-
-            @Override
-            public void onPanelHidden(View view) {
-            }
-        };
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

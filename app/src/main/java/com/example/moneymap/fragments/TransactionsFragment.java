@@ -2,59 +2,39 @@ package com.example.moneymap.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
+import com.example.moneymap.MainActivity;
+import com.example.moneymap.TransactionAdapter;
 import com.example.moneymap.R;
+import com.example.moneymap.Transaction;
+import com.example.moneymap.Utils;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TransactionsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class TransactionsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public TransactionsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TransactionsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TransactionsFragment newInstance(String param1, String param2) {
-        TransactionsFragment fragment = new TransactionsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    RecyclerView recyclerView;
+    TransactionAdapter transactionAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,5 +42,46 @@ public class TransactionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_transactions, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        FirebaseRecyclerOptions<Transaction> options = new FirebaseRecyclerOptions.Builder<Transaction>()
+                .setQuery(Utils.databaseReference.child("transactions"), Transaction.class)
+                .build();
+
+        transactionAdapter = new TransactionAdapter(options);
+        recyclerView.setAdapter(transactionAdapter);
+
+        transactionAdapter.startListening();
+//        Utils.databaseReference.child("transactions").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                final List<Transaction> transactionsList = new ArrayList<Transaction>();
+//
+//                for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
+//                    String transactionCategory = addressSnapshot.child("category").getValue(String.class);
+//                    String transactionAccount = addressSnapshot.child("account").getValue(String.class);
+//                    String transactionNote = addressSnapshot.child("note").getValue(String.class);
+//                    String transactionAmount = addressSnapshot.child("note").getValue(String.class);
+//                    Transaction transaction = new Transaction(transactionAccount, transactionCategory, transactionNote, transactionAmount);
+//                    transactionsList.add(transaction);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+//        TransactionAdapter myAdapter = new TransactionAdapter(this, classes, descriptions, amount, images);
+//        recyclerView.setAdapter(myAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 }

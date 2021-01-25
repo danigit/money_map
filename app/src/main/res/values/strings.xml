@@ -57,8 +57,9 @@
     <string name="seven">7</string>
     <string name="eight">8</string>
     <string name="nine">9</string>
-    <string name="comma">,</string>
+    <string name="comma">.</string>
     <string name="insert_transaction">Insert</string>
+    <string name="cancel_transaction_button_label">Close</string>
 
 
 </resources>

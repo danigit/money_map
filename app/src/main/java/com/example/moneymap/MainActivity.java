@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private Button nineButton;
     private Button commaButton;
     private Button deleteNumberButton;
+    private Button closePanelButton;
     private Button insertTransactionButton;
     private Spinner accountSpinner;
     private Spinner categoriesSpinner;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private String transactionCategory;
     private TextView amountTextView;
     private EditText transactionNote;
+    private SlidingUpPanelLayout slidingLayout;
 
 
     @Override
@@ -110,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
         eightButton = (Button) findViewById(R.id.eight_button);
         nineButton = (Button) findViewById(R.id.nine_button);
         commaButton = (Button) findViewById(R.id.comma_button);
+        closePanelButton = (Button) findViewById(R.id.cancel_transaction_button);
         deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
         insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
 
         amountTextView = (TextView) findViewById(R.id.transaction_amount_text_view);
+        transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
 
         zeroButton.setOnClickListener(getTransactionInput());
         oneButton.setOnClickListener(getTransactionInput());
@@ -126,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
         eightButton.setOnClickListener(getTransactionInput());
         nineButton.setOnClickListener(getTransactionInput());
         commaButton.setOnClickListener(getTransactionInput());
+        closePanelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
         deleteNumberButton.setOnClickListener(getTransactionInput());
         insertTransactionButton.setOnClickListener(getTransactionInput());
     }
@@ -161,8 +173,11 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void addTransaction(){
-        SlidingUpPanelLayout slidingLayout;
+
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingLayout.getChildAt(1).setOnClickListener(null);
+        transactionAmountString = "";
+        transactionNote.setText("");
 
         Utils.databaseReference.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -214,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
@@ -222,71 +238,82 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int buttonId = v.getId();
-                Log.d(Utils.TAG, "" + buttonId);
+                String tempAmount = transactionAmountString;
                 switch (buttonId){
                     case R.id.zero_button:
-                        if (transactionAmountString.charAt(0) != '0' && transactionAmountString.charAt(0) != ',') {
-                            transactionAmountString += "0";
+                        tempAmount += "0";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.one_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "1";
+                        tempAmount += "1";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.two_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "2";
+                        tempAmount += "2";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.three_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "3";
+                        tempAmount += "3";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.four_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "4";
+                        tempAmount += "4";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.five_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "5";
+                        tempAmount += "5";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.six_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "6";
+                        tempAmount += "6";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.seven_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "7";
+                        tempAmount += "7";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.eight_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "8";
+                        tempAmount += "8";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.nine_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += "9";
+                        tempAmount += "9";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString = tempAmount;
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
                     case R.id.comma_button:
-                        if (validAmount(transactionAmountString)) {
-                            transactionAmountString += ",";
+                        tempAmount += ".0";
+                        if (validAmount(tempAmount)) {
+                            transactionAmountString += ".";
                             amountTextView.setText(transactionAmountString);
                         }
                         break;
@@ -305,14 +332,12 @@ public class MainActivity extends AppCompatActivity {
                         String category = categoriesSpinner.getSelectedItem().toString();
                         String note = transactionNote.getText().toString();
 
-                        if (transactionAmountString.charAt(transactionAmountString.length() - 1) == ','){
-                            transactionAmountString = transactionAccount.substring(0, transactionAccount.length() - 1);
-                        }
-
                         Transaction transaction = new Transaction(account, category, note, transactionAmountString);
                         DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
                         String key = transactionsReference.push().getKey();
                         transactionsReference.child(key).setValue(transaction);
+
+                        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         break;
                 }
             }
@@ -320,11 +345,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean validAmount(String amount){
-        int numberOfCommas = 0;
+        boolean match = false;
         if (amount != null) {
-            numberOfCommas = amount.replaceAll("[^,]", "").length();
+            String decimalPattern = "(^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$)";
+            match = Pattern.matches(decimalPattern, amount);
         }
 
-        return numberOfCommas <= 1;
+        return match;
     }
 }
