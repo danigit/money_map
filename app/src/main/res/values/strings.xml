@@ -17,6 +17,7 @@
     <string name="logout_button_text">LOGOUT</string>
     <string name="user_settings">User</string>
     <string name="account_management">Accounts</string>
+    <string name="categories">Categories</string>
     <string name="add_transaction">Add transaction</string>
     <string name="transactions">Transactions</string>
     <string name="overview">Overview</string>
@@ -44,6 +45,7 @@
     <string name="accounts_total_label">All accounts</string>
     <string name="add_account_button">ADD</string>
     <string name="add_account_name_input">Insert Name</string>
+    <string name="add_category_name_input">Insert Category Name</string>
     <string name="add_account_description_input">Insert description</string>
     <string name="add_account_amount_input">Insert initial amount</string>
     <string name="save_account_button">Save Account</string>

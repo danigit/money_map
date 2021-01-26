@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/user_settings"
-        android:icon="@drawable/user_profile"
-        android:title="@string/user_settings"/>
+<!--    <item-->
+<!--        android:id="@+id/user_settings"-->
+<!--        android:icon="@drawable/user_profile"-->
+<!--        android:title="@string/user_settings"/>-->
 
     <item
         android:id="@+id/account_management"
         android:icon="@drawable/account_management"
         android:title="@string/account_management" />
+
+    <item
+        android:id="@+id/categories"
+        android:icon="@drawable/account_management"
+        android:title="@string/categories" />
 
     <item
         android:id="@+id/add_transaction"

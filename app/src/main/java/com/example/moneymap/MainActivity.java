@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.moneymap.fragments.AccountFragment;
+import com.example.moneymap.fragments.CategoriesFragment;
 import com.example.moneymap.fragments.OverviewFragment;
 import com.example.moneymap.fragments.TransactionsFragment;
 import com.example.moneymap.fragments.UserFragment;
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     private UserFragment user_fragment;
-    private AccountFragment account_fragment;
-    private TransactionsFragment transactions_fragment;
-    private OverviewFragment overview_fragment;
+    private AccountFragment accountFragment;
+    private CategoriesFragment categoriesFragment;
+    private TransactionsFragment transactionsFragment;
+    private OverviewFragment overviewFragment;
     private String transactionAmountString = "";
     private Button zeroButton;
     private Button oneButton;
@@ -74,14 +76,15 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
 
-        user_fragment = new UserFragment();
-        account_fragment = new AccountFragment();
-        transactions_fragment = new TransactionsFragment();
+//        user_fragment = new UserFragment();
+        accountFragment = new AccountFragment();
+        categoriesFragment = new CategoriesFragment();
+        transactionsFragment = new TransactionsFragment();
 
-        overview_fragment = new OverviewFragment();
+        overviewFragment = new OverviewFragment();
 
-        bottomNavigationView.getMenu().getItem(3).setChecked(true);
-        changeFragment(transactions_fragment);
+        bottomNavigationView.getMenu().getItem(4).setChecked(true);
+        changeFragment(transactionsFragment);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
 
@@ -152,20 +155,23 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
-                case R.id.user_settings:
-                    changeFragment(user_fragment);
-                    break;
+//                case R.id.user_settings:
+//                    changeFragment(user_fragment);
+//                    break;
                 case R.id.account_management:
-                    changeFragment(account_fragment);
+                    changeFragment(accountFragment);
+                    break;
+                case R.id.categories:
+                    changeFragment(categoriesFragment);
                     break;
                 case R.id.add_transaction:
                     addTransaction();
                     break;
                 case R.id.transactions:
-                    changeFragment(transactions_fragment);
+                    changeFragment(transactionsFragment);
                     break;
                 case R.id.overview:
-                    changeFragment(overview_fragment);
+                    changeFragment(overviewFragment);
                     break;
             }
             return true;
@@ -186,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 final List<String> categoriesList = new ArrayList<String>();
 
                 for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
-                    String propertyAddress = addressSnapshot.getValue(String.class);
+                    String propertyAddress = addressSnapshot.child("name").getValue(String.class);
                     if (propertyAddress!=null){
                         categoriesList.add(propertyAddress);
                     }
