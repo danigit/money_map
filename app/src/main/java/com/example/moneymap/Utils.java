@@ -2,8 +2,13 @@ package com.example.moneymap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -50,5 +55,29 @@ public class Utils {
     public static void showToast(Context context, String message, int length){
         Toast.makeText(context, message, length)
             .show();
+    }
+
+    public static void showErrorToast(Context context, String message, int length){
+        Toast errorToast = Toast.makeText(context, message, length);
+        TextView v = (TextView) errorToast.getView().findViewById(android.R.id.message);
+        ((View)v.getParent()).setBackgroundColor(context.getResources().getColor(R.color.red_color));
+        v.setBackgroundColor(context.getResources().getColor(R.color.red_color));
+        v.setTextColor(context.getResources().getColor(R.color.white));
+        errorToast.show();
+    }
+
+    public static void showWarnToast(Context context, String message, int length){
+        Toast errorToast = Toast.makeText(context, message, length);
+        TextView v = (TextView) errorToast.getView().findViewById(android.R.id.message);
+        ((View)v.getParent()).setBackgroundColor(context.getResources().getColor(R.color.yellow_color));
+        v.setBackgroundColor(context.getResources().getColor(R.color.yellow_color));
+        v.setTextColor(context.getResources().getColor(R.color.ap_black));
+        errorToast.show();
+    }
+
+    public static boolean isConnectionActive(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 }

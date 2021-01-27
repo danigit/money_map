@@ -16,4 +16,6 @@
     <color name="bordeaux">#8E3C77</color>
     <color name="dark_pink">#C6427B</color>
     <color name="light_pink">#FE4880</color>
+    <color name="light_gray">#A4A4A4</color>
+    <color name="white">#FFFFFF</color>
 </resources>

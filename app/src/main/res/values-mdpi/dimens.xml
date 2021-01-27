@@ -2,6 +2,12 @@
 <resources>
     <dimen name="x_small_size">12sp</dimen>
     <dimen name="small_size">18sp</dimen>
+    <dimen name="medium_size">24sp</dimen>
     <dimen name="normal_size">32sp</dimen>
     <dimen name="large_size">48sp</dimen>
+
+    <dimen name="margin_small">20dp</dimen>
+    <dimen name="margin_medium">50dp</dimen>
+    <dimen name="margin_normal">75dp</dimen>
+    <dimen name="margin_large">100dp</dimen>
 </resources>

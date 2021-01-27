@@ -3,7 +3,6 @@ package com.example.moneymap;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,14 +17,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
 
+
+/**
+ * Class that handles the registration of a new user
+ */
 public class Register extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText email;
     private EditText password;
     private EditText confirmPassword;
-    private TextView loginLabel;
     private ProgressBar progressBar;
     private Button registerButton;
 
@@ -35,18 +38,18 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
         email = (EditText) findViewById(R.id.username_input_field_register);
         password = (EditText) findViewById(R.id.password_input_field_register);
         confirmPassword = (EditText) findViewById(R.id.password_reinsert_input_field);
-        loginLabel = (TextView) findViewById(R.id.go_to_login_label);
         progressBar = (ProgressBar) findViewById(R.id.register_progress);
         registerButton = (Button) findViewById(R.id.register_button);
 
         registerButton.setOnClickListener(handleRegisterUser);
-        loginLabel.setOnClickListener(goToLogin);
+        ((TextView) findViewById(R.id.go_to_login_label)).setOnClickListener(goToLogin);
     }
 
-    private View.OnClickListener handleRegisterUser = new View.OnClickListener() {
+    private final View.OnClickListener handleRegisterUser = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String emailString = email.getText().toString().trim();
@@ -86,10 +89,21 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            // finishing the activity so that I cannot go back to register if the user is
-                            // already logged
-                            finish();
+                            // sending validation email
+                            Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                Utils.showWarnToast(Register.this, "Please check your email for verification", Toast.LENGTH_SHORT);
+                                                // finishing the activity so that I cannot go back to register if the user is
+                                                // already logged
+                                                finish();
+                                            } else{
+                                                Utils.showErrorToast(Register.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT);
+                                            }
+                                        }
+                                    });
                         } else {
                             if (task.getException() != null) {
                                 Toast.makeText(Register.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT)
@@ -104,7 +118,7 @@ public class Register extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener goToLogin = new View.OnClickListener() {
+    private final View.OnClickListener goToLogin = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             finish();
