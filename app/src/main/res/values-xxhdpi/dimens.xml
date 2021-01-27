@@ -6,8 +6,17 @@
     <dimen name="normal_size">22sp</dimen>
     <dimen name="large_size">32sp</dimen>
 
-    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_add_account_input">128dp</dimen>
+    <dimen name="margin_x_small">8dp</dimen>
+    <dimen name="margin_small">18dp</dimen>
     <dimen name="margin_medium">32dp</dimen>
     <dimen name="margin_normal">50dp</dimen>
-    <dimen name="margin_large">75dp</dimen>
+    <dimen name="margin_large">110dp</dimen>
+
+    <dimen name="dim_x_small">14dp</dimen>
+    <dimen name="dim_small">20dp</dimen>
+    <dimen name="dim_medium">60dp</dimen>
+    <dimen name="dim_normal">100dp</dimen>
+    <dimen name="dim_large">320dp</dimen>
+    <dimen name="dim_x_large">400dp</dimen>
 </resources>

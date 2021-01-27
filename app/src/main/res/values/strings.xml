@@ -43,7 +43,6 @@
     <string name="take_photo_icon">Take Photo Icon</string>
     <string name="account_row_image">Account image</string>
     <string name="accounts_total_label">All accounts</string>
-    <string name="add_account_button">ADD</string>
     <string name="add_account_name_input">Insert Name</string>
     <string name="add_category_name_input">Insert Category Name</string>
     <string name="add_account_description_input">Insert description</string>
@@ -61,7 +60,8 @@
     <string name="nine">9</string>
     <string name="comma">.</string>
     <string name="insert_transaction">Insert</string>
-    <string name="cancel_transaction_button_label">Close</string>
+    <string name="close">CLOSE</string>
+    <string name="add">ADD</string>
 
 
 </resources>

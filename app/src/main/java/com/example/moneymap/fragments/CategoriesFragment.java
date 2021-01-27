@@ -7,29 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moneymap.Account;
 import com.example.moneymap.AddCategoryAdapter;
 import com.example.moneymap.CategoriesAdapter;
 import com.example.moneymap.Category;
 import com.example.moneymap.R;
-import com.example.moneymap.Transaction;
-import com.example.moneymap.TransactionAdapter;
 import com.example.moneymap.Utils;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
@@ -105,6 +97,7 @@ public class CategoriesFragment extends Fragment {
             }
         });
 
-        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
+        slidingLayout.getChildAt(1).setOnClickListener(null);
     }
 }

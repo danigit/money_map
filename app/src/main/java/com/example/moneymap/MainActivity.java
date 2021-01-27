@@ -1,17 +1,19 @@
 package com.example.moneymap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
         deleteNumberButton.setOnClickListener(getTransactionInput());
         insertTransactionButton.setOnClickListener(getTransactionInput());
+
     }
 
     public void changeFragment(Fragment fragment){

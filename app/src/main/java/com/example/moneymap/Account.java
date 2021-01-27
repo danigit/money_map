@@ -9,6 +9,8 @@ public class Account {
     public String description;
     public double amount;
 
+    public Account(){}
+
     public Account(String title, String description, double amount){
         this.title = title;
         this.description = description;

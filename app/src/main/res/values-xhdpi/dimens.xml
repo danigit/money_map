@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="x_small_size">12sp</dimen>
-    <dimen name="small_size">14sp</dimen>
+    <dimen name="x_small_size">10sp</dimen>
+    <dimen name="small_size">12sp</dimen>
     <dimen name="medium_size">16sp</dimen>
     <dimen name="normal_size">18sp</dimen>
     <dimen name="large_size">24sp</dimen>
 
-    <dimen name="margin_small">10dp</dimen>
-    <dimen name="margin_medium">32dp</dimen>
-    <dimen name="margin_normal">50dp</dimen>
-    <dimen name="margin_large">75dp</dimen>
+    <dimen name="margin_add_account_input">8dp</dimen>
+    <dimen name="margin_x_small">6dp</dimen>
+    <dimen name="margin_small">16dp</dimen>
+    <dimen name="margin_medium">50dp</dimen>
+    <dimen name="margin_normal">70dp</dimen>
+    <dimen name="margin_large">95dp</dimen>
+
+    <dimen name="dim_x_small">14dp</dimen>
+    <dimen name="dim_small">20dp</dimen>
+    <dimen name="dim_medium">60dp</dimen>
+    <dimen name="dim_normal">100dp</dimen>
+    <dimen name="dim_large">320dp</dimen>
+    <dimen name="dim_x_large">400dp</dimen>
 </resources>
