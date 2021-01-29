@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.moneymap.fragments.AccountFragment;
 import com.example.moneymap.fragments.CategoriesFragment;
@@ -336,12 +337,17 @@ public class MainActivity extends AppCompatActivity {
                         String category = categoriesSpinner.getSelectedItem().toString();
                         String note = transactionNote.getText().toString();
 
-                        Transaction transaction = new Transaction(account, category, note, transactionAmountString);
-                        DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
-                        String key = transactionsReference.push().getKey();
-                        transactionsReference.child(key).setValue(transaction);
+                        Log.d(Utils.TAG, "The transaction amount is: " + transactionAmountString);
+                        if (!transactionAmountString.equals("")) {
+                            Transaction transaction = new Transaction(account, category, note, transactionAmountString);
+                            DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
+                            String key = transactionsReference.push().getKey();
+                            transactionsReference.child(key).setValue(transaction);
 
-                        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        } else {
+                            Utils.showToast(v.getContext(), "Insert an amount", Toast.LENGTH_SHORT);
+                        }
                         break;
                 }
             }

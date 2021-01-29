@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="x_small_size">16sp</dimen>
     <dimen name="small_size">18sp</dimen>
     <dimen name="normal_size">20sp</dimen>
     <dimen name="large_size">32sp</dimen>
+    <dimen name="x_large_size">62sp</dimen>
+
+    <dimen name="margin_add_account_input">10dp</dimen>
+    <dimen name="margin_x_small">8dp</dimen>
+    <dimen name="margin_small">20dp</dimen>
+    <dimen name="margin_medium">32dp</dimen>
+    <dimen name="margin_normal">50dp</dimen>
+    <dimen name="margin_large">105dp</dimen>
+    <dimen name="margin_transactions_recycler">70dp</dimen>
+
+    <dimen name="dim_x_small">24dp</dimen>
+    <dimen name="dim_small">32dp</dimen>
+    <dimen name="dim_medium">60dp</dimen>
+    <dimen name="dim_normal">100dp</dimen>
+    <dimen name="dim_large">320dp</dimen>
+    <dimen name="dim_x_large">400dp</dimen>
+    <dimen name="transaction_radio_buttons">40dp</dimen>
 </resources>

@@ -21,8 +21,7 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
     @Override
     protected void onBindViewHolder(@NonNull transactionViewHolder holder, int position, @NonNull Transaction model) {
 
-        Log.d(Utils.TAG, "setting the fields");
-        holder.account.setText(model.amount);
+        holder.account.setText(model.account);
         holder.category.setText(model.category);
         holder.note.setText(model.note);
         holder.amount.setText(model.amount);

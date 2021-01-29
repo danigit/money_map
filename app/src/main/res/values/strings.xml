@@ -65,6 +65,7 @@
     <string name="category_image">Category image</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
+    <string name="insert_note_hint">Insert note</string>
 
 
 </resources>

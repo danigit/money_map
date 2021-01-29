@@ -14,10 +14,11 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_transactions_recycler"
             android:paddingTop="50dp"
             android:visibility="visible"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 
