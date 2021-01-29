@@ -1,13 +1,10 @@
 package com.example.moneymap;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Button nineButton;
     private Button commaButton;
     private Button deleteNumberButton;
-    private Button closePanelButton;
+    private TextView closePanelButton;
     private Button insertTransactionButton;
     private Spinner accountSpinner;
     private Spinner categoriesSpinner;
@@ -73,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        Utils.database.setPersistenceEnabled(true);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
 
@@ -119,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         eightButton = (Button) findViewById(R.id.eight_button);
         nineButton = (Button) findViewById(R.id.nine_button);
         commaButton = (Button) findViewById(R.id.comma_button);
-        closePanelButton = (Button) findViewById(R.id.cancel_transaction_button);
+        closePanelButton = (TextView) findViewById(R.id.cancel_transaction_button);
         deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
         insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
 

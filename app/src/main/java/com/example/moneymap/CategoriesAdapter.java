@@ -1,5 +1,6 @@
 package com.example.moneymap;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,9 @@ public class CategoriesAdapter extends FirebaseRecyclerAdapter<Category, Categor
     @Override
     protected void onBindViewHolder(@NonNull categoryViewHolder holder, int position, @NonNull Category model) {
 
+        int categoryImageId = holder.categoryImage.getContext().getResources().getIdentifier(model.imageName, "drawable", holder.categoryImage.getContext().getPackageName());
         holder.name.setText(model.name);
-        holder.categoryImage.setImageResource(holder.categoryImage.getContext().getResources().getIdentifier(model.imageName, "drawable", holder.categoryImage.getContext().getPackageName()));
+        holder.categoryImage.setImageResource(categoryImageId);
     }
 
     @NonNull

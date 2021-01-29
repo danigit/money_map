@@ -63,6 +63,8 @@
     <string name="close">CLOSE</string>
     <string name="add">ADD</string>
     <string name="category_image">Category image</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
 
 
 </resources>

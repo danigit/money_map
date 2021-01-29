@@ -1,9 +1,5 @@
 package com.example.moneymap;
 
-import android.app.Activity;
-import android.content.Context;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,15 +23,18 @@ public class AddCategoryAdapter extends FirebaseRecyclerAdapter<String, AddCateg
     @Override
     protected void onBindViewHolder(@NonNull final AddCategoryAdapter.AddCategoryViewHolder holder, int position, @NonNull final String model) {
 
-        holder.categoryImage.setImageResource(holder.categoryImage.getContext().getResources().getIdentifier(model, "drawable", holder.categoryImage.getContext().getPackageName()));
+        final int image = holder.categoryImage.getContext().getResources().getIdentifier(model, "drawable", holder.categoryImage.getContext().getPackageName());
+        holder.categoryImage.setImageResource(image);
         holder.categoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageView imageView = (ImageView) ((View)parentView.getParent()).findViewById(R.id.constraintLayout3).findViewById(R.id.category_icon_image);;
-                TextView imageName = (TextView) (((View) parentView.getParent()).findViewById(R.id.constraintLayout3).findViewById(R.id.category_icon_name_text_view));
+                View categoryIconView = ((View)parentView.getParent()).findViewById(R.id.constraintLayout3);
+                ImageView imageView = (ImageView) categoryIconView.findViewById(R.id.category_icon_image);;
+                TextView imageName = (TextView) categoryIconView.findViewById(R.id.category_icon_name_text_view);
+
                 imageName.setText(model);
                 imageName.setVisibility(View.INVISIBLE);
-                imageView.setImageResource(holder.categoryImage.getContext().getResources().getIdentifier(model, "drawable", holder.categoryImage.getContext().getPackageName()));
+                imageView.setImageResource(image);
             }
         });
     }
@@ -46,17 +44,16 @@ public class AddCategoryAdapter extends FirebaseRecyclerAdapter<String, AddCateg
     public AddCategoryAdapter.AddCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         parentView = parent;
+
         View view = inflater.inflate(R.layout.category_layout, parent, false);
         return new AddCategoryAdapter.AddCategoryViewHolder(view);
     }
 
     static class AddCategoryViewHolder extends RecyclerView.ViewHolder{
-
         ImageView categoryImage;
 
         public AddCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-
             categoryImage = itemView.findViewById(R.id.category_image);
         }
     }

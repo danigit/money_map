@@ -49,30 +49,96 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:background="#FFFFFF">
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/cancel_transaction_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_x_small"
+            android:background="@drawable/rounded_corners_red"
+            android:text="@string/close"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x_small_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/x"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/cancel_transaction_button">
 
-            <Spinner
-                android:id="@+id/account_spinner"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="@dimen/normal_size" />
+                android:background="@color/yellow_color">
 
-            <Spinner
-                android:id="@+id/categories_spinner"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <Spinner
+                    android:id="@+id/account_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:prompt="@string/account_management"
+                    android:spinnerMode="dialog"
+                    android:textSize="@dimen/x_small_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/transactions_account_image" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorAccent">
+
+                <Spinner
+                    android:id="@+id/categories_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:prompt="@string/categories"
+                    android:spinnerMode="dialog"
+                    android:textSize="@dimen/x_small_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/transaction_categories" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
@@ -103,6 +169,7 @@
                 android:text="@string/currency"
                 android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/transaction_amount_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/transaction_amount_text_view" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,16 +186,69 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/transaction_note_input2">
+
+            <RadioGroup
+                android:id="@+id/daily_weekly_button_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <RadioButton
+                    android:id="@+id/expense_radio"
+                    android:layout_width="@dimen/dim_normal"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/expense"
+                    android:textColor="@color/ap_black" />
+
+                <RadioButton
+                    android:id="@+id/income_radio"
+                    android:layout_width="@dimen/dim_normal"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="@string/income"
+                    android:textColor="@color/ap_black" />
+
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
             <Button
                 android:id="@+id/two_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/two"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/one_button"
                 app:layout_constraintEnd_toStartOf="@+id/three_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -136,10 +256,13 @@
 
             <Button
                 android:id="@+id/one_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/one"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintEnd_toStartOf="@+id/two_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -147,9 +270,12 @@
 
             <Button
                 android:id="@+id/three_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/three"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/two_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -157,10 +283,13 @@
 
             <Button
                 android:id="@+id/five_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/five"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintEnd_toStartOf="@+id/four_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -168,9 +297,12 @@
 
             <Button
                 android:id="@+id/four_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/four"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/five_button"
                 app:layout_constraintEnd_toStartOf="@+id/six_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -178,9 +310,12 @@
 
             <Button
                 android:id="@+id/six_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/six"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/four_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -188,10 +323,13 @@
 
             <Button
                 android:id="@+id/seven_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/seven"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintEnd_toStartOf="@+id/eight_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -199,9 +337,12 @@
 
             <Button
                 android:id="@+id/eight_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/eight"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/seven_button"
                 app:layout_constraintEnd_toStartOf="@+id/nine_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -209,9 +350,12 @@
 
             <Button
                 android:id="@+id/nine_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nine"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/eight_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -219,10 +363,13 @@
 
             <Button
                 android:id="@+id/comma_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/comma"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintEnd_toStartOf="@+id/zero_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -230,9 +377,12 @@
 
             <Button
                 android:id="@+id/zero_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/zero"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/comma_button"
                 app:layout_constraintEnd_toStartOf="@+id/cancel_number_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -240,9 +390,11 @@
 
             <Button
                 android:id="@+id/cancel_number_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button"
+                android:drawableLeft="@drawable/cancel_number_icon"
+                android:textColor="@color/ap_black"
                 app:layout_constraintBaseline_toBaselineOf="@+id/zero_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -250,34 +402,21 @@
 
             <Button
                 android:id="@+id/insert_transaction_button"
-                android:layout_width="wrap_content"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_x_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 android:text="@string/insert_transaction"
-                app:layout_constraintEnd_toStartOf="@+id/cancel_transaction_button"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/zero_button" />
-
-            <Button
-                android:id="@+id/cancel_transaction_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/close"
-                app:layout_constraintBaseline_toBaselineOf="@+id/insert_transaction_button"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/normal_size"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/insert_transaction_button" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cancel_number_button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
-    <!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context="com.example.moneymap.MainActivity">-->

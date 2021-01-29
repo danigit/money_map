@@ -41,15 +41,9 @@ public class CategoriesFragment extends Fragment {
     private TextView addCategoryButton;
 
 
-    private RecyclerView recyclerView;
-    private RecyclerView recyclerViewView;
-    private CategoriesAdapter categoriesAdapter;
-    private AddCategoryAdapter addCategoriesAdapter;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -63,8 +57,8 @@ public class CategoriesFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.categories_recycler);
-        recyclerViewView = view.findViewById(R.id.categories_recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.categories_recycler);
+        RecyclerView recyclerViewView = view.findViewById(R.id.categories_recycler_view);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerViewView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -76,8 +70,8 @@ public class CategoriesFragment extends Fragment {
                 .setQuery(Utils.databaseReference.child("categories_images"), String.class)
                 .build();
 
-        categoriesAdapter = new CategoriesAdapter(options);
-        addCategoriesAdapter = new AddCategoryAdapter(addAdapterOptions);
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(options);
+        AddCategoryAdapter addCategoriesAdapter = new AddCategoryAdapter(addAdapterOptions);
 
         recyclerView.setAdapter(categoriesAdapter);
         recyclerViewView.setAdapter(addCategoriesAdapter);
@@ -97,6 +91,7 @@ public class CategoriesFragment extends Fragment {
             public void onClick(View v) {
                 String categoryNameString = categoryName.getText().toString();
                 String categoryImageName = categoryIconImageName.getText().toString();
+
                 if (categoryNameString.equals("")){
                     Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
                 } else if (categoryImageName.equals("")) {
