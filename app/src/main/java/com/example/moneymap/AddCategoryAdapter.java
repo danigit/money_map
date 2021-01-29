@@ -28,7 +28,6 @@ public class AddCategoryAdapter extends FirebaseRecyclerAdapter<String, AddCateg
     @Override
     protected void onBindViewHolder(@NonNull final AddCategoryAdapter.AddCategoryViewHolder holder, int position, @NonNull final String model) {
 
-        holder.setCategoryData(position);
         holder.categoryImage.setImageResource(holder.categoryImage.getContext().getResources().getIdentifier(model, "drawable", holder.categoryImage.getContext().getPackageName()));
         holder.categoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,22 +52,12 @@ public class AddCategoryAdapter extends FirebaseRecyclerAdapter<String, AddCateg
 
     static class AddCategoryViewHolder extends RecyclerView.ViewHolder{
 
-        TextView name;
         ImageView categoryImage;
 
         public AddCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-        }
 
-        public void setCategoryData(int index) {
-            Log.d(Utils.TAG, "" + index % 3);
-            if(index % 3 == 0){
-                categoryImage = itemView.findViewById(R.id.category_image);
-            } else if (index % 3 == 1){
-                categoryImage = itemView.findViewById(R.id.category_image1);
-            } else if (index % 3 == 2){
-                categoryImage = itemView.findViewById(R.id.category_image2);
-            }
+            categoryImage = itemView.findViewById(R.id.category_image);
         }
     }
 }

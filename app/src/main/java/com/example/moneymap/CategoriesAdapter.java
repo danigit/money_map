@@ -1,7 +1,5 @@
 package com.example.moneymap;
 
-import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class CategoriesAdapter extends FirebaseRecyclerAdapter<Category, CategoriesAdapter.categoryViewHolder> {
 
@@ -26,7 +22,6 @@ public class CategoriesAdapter extends FirebaseRecyclerAdapter<Category, Categor
     @Override
     protected void onBindViewHolder(@NonNull categoryViewHolder holder, int position, @NonNull Category model) {
 
-        holder.setCategoryData(position);
         holder.name.setText(model.name);
         holder.categoryImage.setImageResource(holder.categoryImage.getContext().getResources().getIdentifier(model.imageName, "drawable", holder.categoryImage.getContext().getPackageName()));
     }
@@ -46,23 +41,8 @@ public class CategoriesAdapter extends FirebaseRecyclerAdapter<Category, Categor
 
         public categoryViewHolder(@NonNull View itemView) {
             super(itemView);
-
-//            name = itemView.findViewById(R.id.category_name);
-//            categoryImage = itemView.findViewById(R.id.category_image);
-        }
-
-        public void setCategoryData(int index) {
-            Log.d(Utils.TAG, "" + index % 3);
-            if(index % 3 == 0){
-                name = itemView.findViewById(R.id.category_name);
-                categoryImage = itemView.findViewById(R.id.category_image);
-            } else if (index % 3 == 1){
-                name = itemView.findViewById(R.id.category_name1);
-                categoryImage = itemView.findViewById(R.id.category_image1);
-            } else if (index % 3 == 2){
-                name = itemView.findViewById(R.id.category_name2);
-                categoryImage = itemView.findViewById(R.id.category_image2);
-            }
+            name = itemView.findViewById(R.id.category_name);
+            categoryImage = itemView.findViewById(R.id.category_image);
         }
     }
 }

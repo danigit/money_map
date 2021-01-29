@@ -94,9 +94,7 @@
         android:id="@+id/add_account_popup_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:clickable="true"
-        android:focusable="true">
+        android:background="#FFFFFF">
 
         <TextView
             android:id="@+id/add_account_image_button"
@@ -158,7 +156,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/add_account_amount_input"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:text=""
             android:textSize="@dimen/small_size"
             app:layout_constraintEnd_toEndOf="parent"

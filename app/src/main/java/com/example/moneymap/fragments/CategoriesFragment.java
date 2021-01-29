@@ -1,13 +1,17 @@
 package com.example.moneymap.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,13 +38,13 @@ public class CategoriesFragment extends Fragment {
     private SlidingUpPanelLayout slidingLayout;
     private TextView categoryName;
     private TextView categoryIconImageName;
-    private Button saveCategoryButton;
+    private TextView addCategoryButton;
 
 
-    RecyclerView recyclerView;
-    RecyclerView recyclerViewView;
-    CategoriesAdapter categoriesAdapter;
-    AddCategoryAdapter addCategoriesAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewView;
+    private CategoriesAdapter categoriesAdapter;
+    private AddCategoryAdapter addCategoriesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,7 @@ public class CategoriesFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.categories_recycler);
@@ -83,21 +87,68 @@ public class CategoriesFragment extends Fragment {
 
         categoryName = (TextView) view.findViewById(R.id.category_name);
         categoryIconImageName = (TextView) view.findViewById(R.id.category_icon_name_text_view);
+        addCategoryButton = (TextView) view.findViewById(R.id.add_category_button);
 
-        saveCategoryButton = (Button) view.findViewById(R.id.save_category_button);
+        addCategoryButton.setOnClickListener(openCategoryPanel());
+
+        Button saveCategoryButton = (Button) view.findViewById(R.id.save_category_button);
         saveCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Category category = new Category(categoryName.getText().toString(), categoryIconImageName.getText().toString());
-                DatabaseReference accountsReference = Utils.databaseReference.child("categories");
-                accountsReference.child(categoryName.getText().toString()).setValue(category);
-                InputMethodManager imm = (InputMethodManager) ((Activity)getContext()).getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                String categoryNameString = categoryName.getText().toString();
+                String categoryImageName = categoryIconImageName.getText().toString();
+                if (categoryNameString.equals("")){
+                    Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
+                } else if (categoryImageName.equals("")) {
+                    Utils.showToast(getContext(), "Please select an image", Toast.LENGTH_SHORT);
+                }else{
+                    Category category = new Category(categoryNameString, categoryImageName);
+                    DatabaseReference accountsReference = Utils.databaseReference.child("categories");
+                    accountsReference.child(categoryNameString).setValue(category);
+
+                    Context context = getContext();
+                    if (context != null) {
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    }
+
+                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
+                    addCategoryButton.setText(R.string.add);
+                }
             }
         });
 
         slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
-        slidingLayout.getChildAt(1).setOnClickListener(null);
+        slidingLayout.setTouchEnabled(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+    }
+
+    // method that handles the click on the add and close button in the account page
+    public View.OnClickListener openCategoryPanel(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addCategoryButton.getText().toString().equals("CLOSE")) {
+                    categoryName.setText("");
+                    categoryIconImageName.setText("");
+                    ((ImageView) getActivity().findViewById(R.id.category_icon_image)).setImageDrawable(null);
+
+                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
+                    addCategoryButton.setText(R.string.add);
+                } else {
+                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners_red);
+                    addCategoryButton.setText(R.string.close);
+                }
+            }
+        };
     }
 }

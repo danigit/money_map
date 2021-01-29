@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moneymap.Account;
+import com.example.moneymap.Login;
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +40,7 @@ public class AccountFragment extends Fragment {
     private TextView accountName;
     private TextView accountDescription;
     private TextView accountAmount;
-    private TextView addCategoryButton;
+    private TextView addAccountButton;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -57,12 +59,13 @@ public class AccountFragment extends Fragment {
         slidingLayoutAccount = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_account);
         slidingLayoutAccount.setTouchEnabled(false);
 
-        addCategoryButton = (TextView) view.findViewById(R.id.add_account_image_button);
+        addAccountButton = (TextView) view.findViewById(R.id.add_account_image_button);
         accountName = (TextView) view.findViewById(R.id.account_title_input);
         accountDescription = (TextView) view.findViewById(R.id.account_description_input);
         accountAmount = (TextView) view.findViewById(R.id.account_amount_input);
 
-        addCategoryButton.setOnClickListener(openAccountPanel());
+        addAccountButton.setText(R.string.add);
+        addAccountButton.setOnClickListener(openAccountPanel());
 
         Button saveAccountButton = (Button) view.findViewById(R.id.save_account_button);
         saveAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -70,22 +73,31 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 String name = accountName.getText().toString();
                 String description = accountDescription.getText().toString();
-                double amount = Double.parseDouble(accountAmount.getText().toString());
+                String amountString = accountAmount.getText().toString();
+                double amount = 0;
 
-                Account account = new Account(name, description, amount);
+                if (name.equals("")){
+                    Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
+                } else {
+                    if (!amountString.equals(""))
+                        amount = Double.parseDouble(amountString);
 
-                DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
-                accountsReference.child(name).setValue(account);
+                    Account account = new Account(name, description, amount);
 
-                Context context = getContext();
-                if (context != null) {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                    accountsReference.child(name).setValue(account);
+
+                    Context context = getContext();
+                    if (context != null) {
+                        Log.d(Utils.TAG, "Closing the keyboard");
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    }
+
+                    slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
+                    addAccountButton.setText(R.string.add);
                 }
-
-                slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                addCategoryButton.setBackgroundResource(R.drawable.rounded_corners_red);
-                addCategoryButton.setText(R.string.close);
             }
         });
 
@@ -118,6 +130,12 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -129,14 +147,19 @@ public class AccountFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (addCategoryButton.getText().toString().equals("CLOSE")) {
+                if (addAccountButton.getText().toString().equals("CLOSE")) {
+                    accountDescription.setText("");
+                    accountName.setText("");
+                    accountAmount.setText("");
+
                     slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
-                    addCategoryButton.setText(R.string.add);
+                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
+                    addAccountButton.setText(R.string.add);
                 } else {
+                    Log.d(Utils.TAG, "Expanding the panel");
                     slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners_red);
-                    addCategoryButton.setText(R.string.close);
+                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners_red);
+                    addAccountButton.setText(R.string.close);
                 }
             }
         };

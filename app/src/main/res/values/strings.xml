@@ -62,6 +62,7 @@
     <string name="insert_transaction">Insert</string>
     <string name="close">CLOSE</string>
     <string name="add">ADD</string>
+    <string name="category_image">Category image</string>
 
 
 </resources>
