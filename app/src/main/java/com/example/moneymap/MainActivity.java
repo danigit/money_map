@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView amountTextView;
     private EditText transactionNote;
     private SlidingUpPanelLayout slidingLayout;
+    private RadioGroup incomeOutcomeRadioGroup;
 
 
     @Override
@@ -118,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         closePanelButton = (TextView) findViewById(R.id.cancel_transaction_button);
         deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
         insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
+        incomeOutcomeRadioGroup = (RadioGroup) findViewById(R.id.income_outcome_radio_group);
 
         amountTextView = (TextView) findViewById(R.id.transaction_amount_text_view);
         transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
@@ -331,18 +337,29 @@ public class MainActivity extends AppCompatActivity {
                         accountSpinner = (Spinner) findViewById(R.id.account_spinner);
                         categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
                         transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
-
+                        int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
+                        Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
 
                         String account = accountSpinner.getSelectedItem().toString();
                         String category = categoriesSpinner.getSelectedItem().toString();
                         String note = transactionNote.getText().toString();
+                        String type = checkedButton.getText().toString();
 
-                        Log.d(Utils.TAG, "The transaction amount is: " + transactionAmountString);
                         if (!transactionAmountString.equals("")) {
-                            Transaction transaction = new Transaction(account, category, note, transactionAmountString);
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String day = (String) DateFormat.format("EEEE", currentTime);
+                            String dayNumber = (String) DateFormat.format("dd", currentTime);
+                            String month = (String) DateFormat.format("MMMM", currentTime);
+                            String year = (String) DateFormat.format("yyyy", currentTime);
+                            String hours = (String) DateFormat.format("HH", currentTime);
+                            String minutes = (String) DateFormat.format("mm", currentTime);
+                            String seconds = (String) DateFormat.format("ss", currentTime);
+
+                            String transactionKey = day + dayNumber + month + year + "-" + hours + minutes + seconds;
+                            TransactionDate transactionDate = new TransactionDate(day, dayNumber, month, year);
+                            Transaction transaction = new Transaction(account, category, note, transactionAmountString, type.toLowerCase(), transactionDate);
                             DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
-                            String key = transactionsReference.push().getKey();
-                            transactionsReference.child(key).setValue(transaction);
+                            transactionsReference.child(transactionKey).setValue(transaction);
 
                             slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         } else {

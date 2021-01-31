@@ -11,21 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
 
-import com.example.moneymap.MainActivity;
 import com.example.moneymap.TransactionAdapter;
 import com.example.moneymap.R;
 import com.example.moneymap.Transaction;
+import com.example.moneymap.TransactionDate;
 import com.example.moneymap.Utils;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransactionsFragment extends Fragment {
 
@@ -59,6 +56,34 @@ public class TransactionsFragment extends Fragment {
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.startListening();
+
+//        Button change_date = (Button) view.findViewById(R.id.change_date);
+//        change_date.setOnClickListener(new View.OnClickListener() {
+//            int i = 0;
+//            @Override
+//            public void onClick(View v) {
+//                i++;
+//                Utils.databaseReference.child("transactions").child("Sunday30January2021-00570" + i).setValue(new Transaction("fineco", "family", "", "20", "income", new TransactionDate("Sunday", "30", "January", "2021")));
+//            }
+//        });
+//        Button change_date_1 = (Button) view.findViewById(R.id.change_date_1);
+//        change_date_1.setOnClickListener(new View.OnClickListener() {
+//            int i = 0;
+//            @Override
+//            public void onClick(View v) {
+//                i++;
+//                Utils.databaseReference.child("transactions").child("Sunday29January2021-00570" + i).setValue(new Transaction("fineco", "family", "", "20", "income", new TransactionDate("Sunday", "29", "January", "2021")));
+//            }
+//        });
+//        Button change_date_2 = (Button) view.findViewById(R.id.change_date_2);
+//        change_date_2.setOnClickListener(new View.OnClickListener() {
+//            int i = 0;
+//            @Override
+//            public void onClick(View v) {
+//                i++;
+//                Utils.databaseReference.child("transactions").child("Sunday32January2021-00570" + i).setValue(new Transaction("fineco", "family", "", "20", "income", new TransactionDate("Sunday", "32", "January", "2021")));
+//            }
+//        });
 //        Utils.databaseReference.child("transactions").addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {

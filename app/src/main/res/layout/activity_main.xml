@@ -199,7 +199,7 @@
             app:layout_constraintTop_toBottomOf="@+id/transaction_note_input2">
 
             <RadioGroup
-                android:id="@+id/daily_weekly_button_view"
+                android:id="@+id/income_outcome_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

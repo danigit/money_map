@@ -8,67 +8,135 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/transaction_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/logo_image" />
-
-            <TextView
-                android:id="@+id/transaction_category"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/transaction_data_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="TextView"
-                android:textColor="#4CAF50"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/transaction_image"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/transaction_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="TextView"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/transaction_image"
-                app:layout_constraintTop_toBottomOf="@+id/transaction_category" />
-
-            <TextView
-                android:id="@+id/transaction_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="TextView"
-                android:textColor="#F44336"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="@dimen/margin_x_small"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/transaction_note"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/day_number_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    android:textSize="@dimen/normal_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/day_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    android:textSize="@dimen/xx_small_size"
+                    app:layout_constraintStart_toEndOf="@+id/day_number_text_view"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/month_year_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    android:textSize="@dimen/xx_small_size"
+                    app:layout_constraintStart_toEndOf="@+id/day_number_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/day_text_view" />
+
+                <TextView
+                    android:id="@+id/total_amount_date_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_x_small"
+                    android:textSize="@dimen/normal_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/transaction_date_currency"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/transaction_date_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/currency"
+                    android:textSize="@dimen/medium_size"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/total_amount_date_text_view"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:textSize="10sp"
-                android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/transaction_image"
-                app:layout_constraintTop_toBottomOf="@+id/transaction_account" />
+                app:layout_constraintTop_toBottomOf="@+id/transaction_data_container">
+
+                <ImageView
+                    android:id="@+id/transaction_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/logo_image" />
+
+                <TextView
+                    android:id="@+id/transaction_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="TextView"
+                    android:textColor="#4CAF50"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/transaction_image"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/transaction_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="TextView"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toEndOf="@+id/transaction_image"
+                    app:layout_constraintTop_toBottomOf="@+id/transaction_category" />
+
+                <TextView
+                    android:id="@+id/transaction_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="TextView"
+                    android:textColor="#F44336"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/transaction_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="TextView"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toEndOf="@+id/transaction_image"
+                    app:layout_constraintTop_toBottomOf="@+id/transaction_account" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
