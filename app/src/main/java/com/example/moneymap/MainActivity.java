@@ -2,16 +2,29 @@ package com.example.moneymap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,6 +39,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +47,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,12 +81,15 @@ public class MainActivity extends AppCompatActivity {
     private Button insertTransactionButton;
     private Spinner accountSpinner;
     private Spinner categoriesSpinner;
-    private String transactionAccount;
-    private String transactionCategory;
     private TextView amountTextView;
     private EditText transactionNote;
     private SlidingUpPanelLayout slidingLayout;
     private RadioGroup incomeOutcomeRadioGroup;
+    private static final int CAMERA_PICTURE = 0;
+    private String applicationPath;
+    private ImageView userImage;
+    private NavigationView sideMenuView;
+    private DrawerLayout sideMenuDrawer;
 
 
     @Override
@@ -88,7 +108,24 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(transactionsFragment);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
+        sideMenuView = (NavigationView) findViewById(R.id.side_menu);
+        sideMenuDrawer = (DrawerLayout) findViewById(R.id.side_menu_drawer);
 
+        applicationPath = getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/";
+
+        userImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.profile_image);
+
+        ImageView changeProfileImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.take_profile_image_button);
+
+        if (getUserImage() != null) {
+            userImage.setImageBitmap(getUserImage());
+        } else{
+            Utils.showToast(getApplicationContext(), "Unable to find the user image", Toast.LENGTH_SHORT);
+        }
+
+        changeProfileImage.setOnClickListener(handleTakePhoto);
+
+        sideMenuView.setNavigationItemSelectedListener(handleLeftMenuFragments);
 //        AppBarConfiguration appBarConfiguration =
 //                new AppBarConfiguration.Builder(navController.getGraph())
 //                        .setDrawerLayout(drawerLayout)
@@ -171,6 +208,124 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+        super.onActivityResult(requestCode, resultCode, result);
+
+
+
+        if (requestCode == CAMERA_PICTURE){
+            if (resultCode == Activity.RESULT_OK){
+                final Bundle cameraImage = result.getExtras();
+                if (cameraImage != null) {
+                    final Bitmap imageBitmap = (Bitmap) cameraImage.get("data");
+
+                    if (imageBitmap != null) {
+                        Bitmap newBitmap;
+                        float density = getResources().getDisplayMetrics().density;
+
+                        if (density <= 2) {
+                            newBitmap = Utils.scaleImage(imageBitmap, 150, 150);
+                        } else {
+                            newBitmap = Utils.scaleImage(imageBitmap, 450, 450);
+                        }
+
+                        userImage.setImageBitmap(newBitmap);
+
+                        boolean imageSaved = saveUserImage(newBitmap);
+
+                        if (imageSaved){
+                            Utils.showToast(getApplicationContext(), "Image saved to the device", Toast.LENGTH_SHORT);
+                        } else {
+                            Utils.showToast(getApplicationContext(), "Could not save the image", Toast.LENGTH_SHORT);
+                        }
+                    } else {
+                        Utils.showToast(getApplicationContext(), "Could not take the picture", Toast.LENGTH_SHORT);
+                    }
+                } else{
+                    Utils.showToast(getApplicationContext(), "Could not take the picture!", Toast.LENGTH_SHORT);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.accountFragment.isVisible()){
+
+            Log.d(Utils.TAG, "account fragment visible");
+        }
+        super.onBackPressed();
+    }
+
+    public View.OnClickListener handleTakePhoto = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            try {
+                startActivityForResult(cameraIntent, CAMERA_PICTURE);
+            } catch (SecurityException e) {
+                requestPermissions(new String[]{
+                                Manifest.permission.CAMERA
+                        }, 1
+                );
+            }
+        }
+    };
+
+    public boolean saveUserImage(Bitmap image){
+        File fileDirectory = getApplicationContext().getDir(Utils.applicationDirectory, Context.MODE_PRIVATE);
+        File imageFile = new File(fileDirectory, Utils.userImageName + ".jpeg");
+
+        if(imageFile.exists()) {
+            if(!imageFile.delete())
+                return false;
+        }
+
+        FileOutputStream imageStream = null;
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                imageStream = new FileOutputStream(imageFile);
+                if (image != null) {
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, imageStream);
+                    imageStream.flush();
+                    return true;
+                }
+            } else {
+                requestPermissions(new String[] {
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1
+                );
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (imageStream != null)
+                    imageStream.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    public Bitmap getUserImage(){
+        Bitmap image = null;
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            image = BitmapFactory.decodeFile(applicationPath + Utils.userImageName + ".jpeg");
+        } else {
+            requestPermissions(new String[] {
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1
+            );
+        }
+        return image;
+    }
+
     public void changeFragment(Fragment fragment){
        getSupportFragmentManager().beginTransaction()
                .replace(R.id.fl_wrapper, fragment, null)
@@ -194,6 +349,35 @@ public class MainActivity extends AppCompatActivity {
                     changeFragment(transactionsFragment);
                     break;
                 case R.id.overview:
+                    changeFragment(overviewFragment);
+                    break;
+            }
+            return true;
+        }
+    };
+
+    public NavigationView.OnNavigationItemSelectedListener handleLeftMenuFragments = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.account_management:
+                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
+                    changeFragment(accountFragment);
+                    break;
+                case R.id.categories:
+                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
+                    changeFragment(categoriesFragment);
+                    break;
+                case R.id.add_transaction:
+                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
+                    addTransaction();
+                    break;
+                case R.id.transactions:
+                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
+                    changeFragment(transactionsFragment);
+                    break;
+                case R.id.overview:
+                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
                     changeFragment(overviewFragment);
                     break;
             }
