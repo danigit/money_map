@@ -43,7 +43,7 @@ public class CategoriesAdapter extends FirebaseRecyclerAdapter<Category, Categor
 
         public categoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.category_name);
+            name = itemView.findViewById(R.id.category_row_name);
             categoryImage = itemView.findViewById(R.id.category_image);
         }
     }

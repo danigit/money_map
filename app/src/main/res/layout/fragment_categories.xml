@@ -94,6 +94,8 @@
                     android:id="@+id/category_icon_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textColorLink="#252525"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/category_icon_image" />

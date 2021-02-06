@@ -1,8 +1,8 @@
 package com.example.moneymap;
 
-import com.google.firebase.database.IgnoreExtraProperties;
-
-@IgnoreExtraProperties
+/**
+ * Class that defines an account
+ */
 public class Account {
 
     public String title;

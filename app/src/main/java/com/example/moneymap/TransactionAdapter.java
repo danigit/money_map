@@ -26,7 +26,7 @@ import java.util.Map;
 public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, TransactionAdapter.transactionViewHolder> {
 
     double transactionAmount;
-    Map hasInserted = new HashMap<String, Integer>();
+    Map parsedTransactions = new HashMap<String, Integer>();
 
 
     public TransactionAdapter(FirebaseRecyclerOptions<Transaction> options){
@@ -37,60 +37,77 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
     @Override
     protected void onBindViewHolder(@NonNull transactionViewHolder holder, int position, @NonNull Transaction model) {
 
-        Resources resource = holder.note.getResources();
+        final Resources resource = holder.note.getResources();
         final String date = model.transactionDate.day + model.transactionDate.dayNumber + model.transactionDate.month + model.transactionDate.year;
 
-        Object value = hasInserted.get(date);
+
+        Object value = parsedTransactions.get(date);
+
         if (value == null){
+            // getting the data layout
             ConstraintLayout transactionDateLayout = ((View) holder.category.getParent().getParent()).findViewById(R.id.transaction_data_container);
             transactionDateLayout.setVisibility(View.VISIBLE);
+
             TextView day = transactionDateLayout.findViewById(R.id.day_text_view);
             TextView dayNumber = transactionDateLayout.findViewById(R.id.day_number_text_view);
             TextView monthYear = transactionDateLayout.findViewById(R.id.month_year_text_view);
             final TextView dateAmount = transactionDateLayout.findViewById(R.id.total_amount_date_text_view);
+            String monthYearString = model.transactionDate.month.toUpperCase() + " " + model.transactionDate.year;
 
             day.setText(model.transactionDate.day);
             dayNumber.setText(model.transactionDate.dayNumber);
-            String monthYearString = model.transactionDate.month + " " + model.transactionDate.year;
             monthYear.setText(monthYearString);
+
             Utils.databaseReference.child("transactions").addValueEventListener(new ValueEventListener() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                     transactionAmount = 0;
-                    // 4. get all the transactions with the above date and make the sum
                     for (DataSnapshot transaction: snapshot.getChildren()) {
 
                         TransactionDate transactionDateObject = transaction.child("transactionDate").getValue(TransactionDate.class);
                         if (transactionDateObject  != null){
-                            // 4.1 get the date of the current transaction
                             String dateObject = transactionDateObject.day + transactionDateObject.dayNumber + transactionDateObject.month + transactionDateObject.year;
-                            // 4.2 compare it with the current one, if equal add the amount
-                            String amount = transaction.child("amount").getValue().toString();
+                            String transactionAmountChild = (String) transaction.child("amount").getValue();
+                            String amount = "0";
+                            if (transactionAmountChild != null)
+                                amount = transactionAmountChild;
+
                             if (dateObject.equals(date)){
-                                transactionAmount += Double.parseDouble(amount);
+                                Object transactionType = transaction.child("type").getValue();
+                                if (transactionType != null && transactionType.toString().toLowerCase().equals("expense"))
+                                    transactionAmount -= Double.parseDouble(amount);
+                                else
+                                    transactionAmount += Double.parseDouble(amount);
                             }
                         }
                     }
+
+                    if (transactionAmount < 0)
+                        dateAmount.setTextColor(resource.getColor(R.color.red_dark_color));
+                    else
+                        dateAmount.setTextColor(resource.getColor(R.color.colorAccent));
+
                     dateAmount.setText(String.valueOf(transactionAmount));
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Log.e(Utils.TAG, error.getMessage());
                 }
             });
         }
 
-        hasInserted.putIfAbsent(date, position);
+        parsedTransactions.putIfAbsent(date, position);
 
         if (model.type.equals("income")){
             holder.category.setTextColor(resource.getColor(R.color.colorAccent));
-            holder.icon.setImageDrawable(holder.icon.getResources().getDrawable(R.drawable.income_transaction_icon));
+            holder.amount.setTextColor(resource.getColor(R.color.colorAccent));
+            holder.icon.setImageDrawable(resource.getDrawable(R.drawable.income_transaction_icon));
         } else{
             holder.category.setTextColor(resource.getColor(R.color.red_dark_color));
-            ((View)holder.account.getParent()).setBackgroundColor(holder.account.getResources().getColor(R.color.expense_background_color));
+            holder.amount.setTextColor(resource.getColor(R.color.red_dark_color));
+            ((View)holder.account.getParent()).setBackgroundColor(resource.getColor(R.color.expense_background_color));
         }
 
         holder.account.setText(model.account);

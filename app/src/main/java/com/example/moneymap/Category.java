@@ -1,5 +1,8 @@
 package com.example.moneymap;
 
+/**
+ * Class that define a category
+ */
 public class Category {
 
     public String name;

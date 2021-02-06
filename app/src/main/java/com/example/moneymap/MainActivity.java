@@ -82,13 +82,17 @@ public class MainActivity extends AppCompatActivity {
         accountFragment = new AccountFragment();
         categoriesFragment = new CategoriesFragment();
         transactionsFragment = new TransactionsFragment();
-
         overviewFragment = new OverviewFragment();
 
-        bottomNavigationView.getMenu().getItem(4).setChecked(true);
+        bottomNavigationView.getMenu().getItem(3).setChecked(true);
         changeFragment(transactionsFragment);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
+
+//        AppBarConfiguration appBarConfiguration =
+//                new AppBarConfiguration.Builder(navController.getGraph())
+//                        .setDrawerLayout(drawerLayout)
+//                        .build();
 
         // TODO this is temporary
         Button logout = (Button) findViewById(R.id.logout);

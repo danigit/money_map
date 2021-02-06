@@ -1,17 +1,10 @@
 package com.example.moneymap.fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,11 +34,8 @@ public class CategoriesFragment extends Fragment {
     private TextView categoryName;
     private TextView categoryIconImageName;
     private TextView addCategoryButton;
-    boolean isOpened = false;
 
-    public void setListenerToRootView() {
-
-    }
+    public void setListenerToRootView() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +43,7 @@ public class CategoriesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_categories, container, false);
     }
 
@@ -63,11 +51,11 @@ public class CategoriesFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = view.findViewById(R.id.categories_recycler);
-        RecyclerView recyclerViewView = view.findViewById(R.id.categories_recycler_view);
+        RecyclerView categoriesRecycler = view.findViewById(R.id.categories_recycler);
+        RecyclerView addCategoryRecycler = view.findViewById(R.id.categories_recycler_view);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        categoriesRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        addCategoryRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
                 .setQuery(Utils.databaseReference.child("categories"), Category.class)
@@ -79,24 +67,37 @@ public class CategoriesFragment extends Fragment {
         CategoriesAdapter categoriesAdapter = new CategoriesAdapter(options);
         AddCategoryAdapter addCategoriesAdapter = new AddCategoryAdapter(addAdapterOptions);
 
-        recyclerView.setAdapter(categoriesAdapter);
-        recyclerViewView.setAdapter(addCategoriesAdapter);
+        categoriesRecycler.setAdapter(categoriesAdapter);
+        addCategoryRecycler.setAdapter(addCategoriesAdapter);
 
         categoriesAdapter.startListening();
         addCategoriesAdapter.startListening();
 
-        setListenerToRootView();
+//        setListenerToRootView();
+        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
         categoryName = (TextView) view.findViewById(R.id.category_name);
         categoryIconImageName = (TextView) view.findViewById(R.id.category_icon_name_text_view);
         addCategoryButton = (TextView) view.findViewById(R.id.add_category_button);
 
-        addCategoryButton.setOnClickListener(openCategoryPanel());
-
-        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
+        addCategoryButton.setOnClickListener(Utils.openCloseAccountPanel(slidingLayout, addCategoryButton, "categories"));
         slidingLayout.setTouchEnabled(false);
 
         Button saveCategoryButton = (Button) view.findViewById(R.id.save_category_button);
-        saveCategoryButton.setOnClickListener(new View.OnClickListener() {
+        saveCategoryButton.setOnClickListener(insertCategoryHandler());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    /**
+     * Method that handles the insertion of a new category in the database
+     * @return onClickListener
+     */
+    private View.OnClickListener insertCategoryHandler(){
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String categoryNameString = categoryName.getText().toString();
@@ -112,39 +113,7 @@ public class CategoriesFragment extends Fragment {
                     accountsReference.child(categoryNameString).setValue(category);
 
                     Utils.closeKeyboard(v);
-                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-                    addCategoryButton.setText(R.string.add);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-    }
-
-    // method that handles the click on the add and close button in the account page
-    public View.OnClickListener openCategoryPanel(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addCategoryButton.getText().toString().equals("CLOSE")) {
-                    categoryName.setText("");
-                    categoryIconImageName.setText("");
-                    ((ImageView) getActivity().findViewById(R.id.category_icon_image)).setImageDrawable(null);
-
-                    Utils.closeKeyboard(v);
-                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
-                    addCategoryButton.setText(R.string.add);
-                } else {
-                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners_red);
-                    addCategoryButton.setText(R.string.close);
+                    Utils.closePanel(slidingLayout, addCategoryButton);
                 }
             }
         };

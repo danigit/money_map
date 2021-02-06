@@ -1,6 +1,5 @@
 package com.example.moneymap.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -12,14 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moneymap.Account;
-import com.example.moneymap.Login;
 import com.example.moneymap.R;
 import com.example.moneymap.Utils;
 import com.google.firebase.database.DataSnapshot;
@@ -42,19 +39,18 @@ public class AccountFragment extends Fragment {
     private TextView accountAmount;
     private TextView addAccountButton;
 
-    public AccountFragment() {
-        // Required empty public constructor
-    }
+    public AccountFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Button saveAccountButton = (Button) view.findViewById(R.id.save_account_button);
 
         slidingLayoutAccount = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_account);
         slidingLayoutAccount.setTouchEnabled(false);
@@ -64,59 +60,37 @@ public class AccountFragment extends Fragment {
         accountDescription = (TextView) view.findViewById(R.id.account_description_input);
         accountAmount = (TextView) view.findViewById(R.id.account_amount_input);
 
-        addAccountButton.setText(R.string.add);
-        addAccountButton.setOnClickListener(openAccountPanel());
-
-        Button saveAccountButton = (Button) view.findViewById(R.id.save_account_button);
-        saveAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = accountName.getText().toString();
-                String description = accountDescription.getText().toString();
-                String amountString = accountAmount.getText().toString();
-                double amount = 0;
-
-                if (name.equals("")){
-                    Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
-                } else {
-                    if (!amountString.equals(""))
-                        amount = Double.parseDouble(amountString);
-
-                    Account account = new Account(name, description, amount);
-
-                    DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
-                    accountsReference.child(name).setValue(account);
-
-                    Utils.closeKeyboard(v);
-                    slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
-                    addAccountButton.setText(R.string.add);
-                }
-            }
-        });
+        addAccountButton.setOnClickListener(Utils.openCloseAccountPanel(slidingLayoutAccount, addAccountButton, "accounts"));
+        saveAccountButton.setOnClickListener(addAccountListener());
 
         final LinearLayout accounts_layout = (LinearLayout) view.findViewById(R.id.accounts_layout);
 
+        // getting the data from the database
         Utils.databaseReference.child("accounts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Context context = getContext();
+                TextView allAccountsTotal = (TextView) view.findViewById(R.id.all_accounts_total);
+
                 double accountsTotal = 0;
                 accounts_layout.removeAllViews();
 
-                for (DataSnapshot child: snapshot.getChildren()){
-                    Account account = child.getValue(Account.class);
+                for (DataSnapshot accountElement: snapshot.getChildren()){
+                    Account account = accountElement.getValue(Account.class);
 
                     if (account != null) {
                         accountsTotal += account.amount;
-                        Context context = getContext();
                         if (context != null) {
                             accounts_layout.addView(fillAccountRow(account, context));
+                        } else {
+                            Log.d(Utils.TAG, "The context is null");
                         }
+                    } else {
+                        Utils.showErrorToast(context, "Database error", Toast.LENGTH_SHORT);
+                        Log.d(Utils.TAG, "The account is null!");
                     }
                 }
 
-                TextView allAccountsTotal = (TextView) view.findViewById(R.id.all_accounts_total);
                 allAccountsTotal.setText(String.valueOf(accountsTotal));
             }
 
@@ -134,49 +108,70 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public void onPause() {
+        super.onPause();
+
+        slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
-    // method that handles the click on the add and close button in the account page
-    public View.OnClickListener openAccountPanel(){
+    /**
+     * Method that handles the insertion of a new account into the database
+     * @return onClickListener
+     */
+    private View.OnClickListener addAccountListener(){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (slidingLayoutAccount.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    accountDescription.setText("");
-                    accountName.setText("");
-                    accountAmount.setText("");
+                String name = accountName.getText().toString();
+                String description = accountDescription.getText().toString();
+                String amountString = accountAmount.getText().toString();
+                double amount = 0;
+
+                if (name.equals("")){
+                    Utils.showWarnToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
+                } else {
+                    if (!amountString.equals(""))
+                        amount = Double.parseDouble(amountString);
+
+                    Account account = new Account(name, description, amount);
+
+                    DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                    accountsReference.child(name).setValue(account);
 
                     Utils.closeKeyboard(v);
-                    slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
-                    addAccountButton.setText(R.string.add);
-                } else {
-                    slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                    addAccountButton.setBackgroundResource(R.drawable.rounded_corners_red);
-                    addAccountButton.setText(R.string.close);
+                    Utils.closePanel(slidingLayoutAccount, addAccountButton);
                 }
             }
         };
     }
 
-    // method that creates and fill a view which represent an account retrieved from the database
-    public View fillAccountRow(Account account, Context context){
+    /**
+     * method that creates and fill a view which represent an account retrieved from the database
+     * @param account - contains account information
+     * @param context - is the application context
+     * @return layout - is the layout to be inserted
+     */
+    private View fillAccountRow(Account account, Context context){
         View layout = LayoutInflater.from(context).inflate(R.layout.account_row, null);
 
         if (layout != null) {
 
             TextView title = layout.findViewById(R.id.account_title);
-            title.setText(account.title);
-
             TextView description = layout.findViewById(R.id.account_description);
-            description.setText(account.description);
-
             TextView amount = layout.findViewById(R.id.account_amount);
+
+            if (account.amount < 0) {
+                title.setTextColor(getResources().getColor(R.color.red_color));
+                amount.setTextColor(getResources().getColor(R.color.red_color));
+            }
+
+            title.setText(account.title);
+            description.setText(account.description);
             amount.setText(String.valueOf(account.amount));
         }
 

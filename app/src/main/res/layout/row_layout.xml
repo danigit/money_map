@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#00A4A4A4">
@@ -61,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_x_small"
+                    android:fontFamily="@font/varela_round"
                     android:textSize="@dimen/normal_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/transaction_date_currency"
@@ -82,6 +82,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#0D4CAF50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transaction_data_container">
 
                 <ImageView
@@ -92,19 +94,19 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/expense_transaction_icon" />
+                    app:srcCompat="@drawable/expense_transaction_icon"
+                    android:contentDescription="@string/category_image" />
 
                 <TextView
                     android:id="@+id/transaction_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="TextView"
+                    android:layout_marginTop="@dimen/margin_x_small"
+                    android:text=""
                     android:textColor="#4CAF50"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/x_small_size"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/transaction_image"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -113,18 +115,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="TextView"
-                    android:textSize="10sp"
+                    android:text=""
+                    android:textSize="@dimen/xx_small_size"
                     app:layout_constraintStart_toEndOf="@+id/transaction_image"
                     app:layout_constraintTop_toBottomOf="@+id/transaction_category" />
-
-                @
 
                 <TextView
                     android:id="@+id/transaction_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_x_small"
+                    android:fontFamily="@font/varela_round"
                     android:textColor="#F44336"
                     android:textSize="@dimen/small_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -146,8 +147,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="TextView"
-                    android:textSize="10sp"
+                    android:layout_marginBottom="@dimen/margin_x_small"
+                    android:text=""
+                    android:textSize="@dimen/xx_small_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/transaction_image"
                     app:layout_constraintTop_toBottomOf="@+id/transaction_account" />
             </androidx.constraintlayout.widget.ConstraintLayout>

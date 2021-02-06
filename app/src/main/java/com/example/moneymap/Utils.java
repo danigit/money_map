@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,5 +92,46 @@ public class Utils {
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+    /**
+     * method that handles the click on the add and close button in the account page
+     * @return onClickListener
+     */
+    public static View.OnClickListener openCloseAccountPanel(final SlidingUpPanelLayout slidingPanel, final TextView openButton, final String section){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // toggle the panel up and down
+                if (slidingPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    Utils.closeKeyboard(v);
+                    Utils.closePanel(slidingPanel, openButton);
+                } else {
+                    slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    openButton.setBackgroundResource(R.drawable.rounded_corners_red);
+                    openButton.setText(R.string.close);
+
+                    // cleaning the panels
+                    switch (section){
+                        case "categories":
+                            ((TextView) slidingPanel.findViewById(R.id.category_name)).setText("");
+                            ((TextView) slidingPanel.findViewById(R.id.category_icon_name_text_view)).setText("");
+                            ((ImageView) slidingPanel.findViewById(R.id.category_icon_image)).setImageDrawable(null);
+                            break;
+                        case "accounts":
+                            ((TextView) slidingPanel.findViewById(R.id.account_title_input)).setText("");
+                            ((TextView) slidingPanel.findViewById(R.id.account_description_input)).setText("");
+                            ((TextView) slidingPanel.findViewById(R.id.account_amount_input)).setText("");
+                            break;
+                    }
+                }
+            }
+        };
+    }
+
+    public static void closePanel(SlidingUpPanelLayout panel, TextView panelButton){
+        panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        panelButton.setBackgroundResource(R.drawable.rounded_corners);
+        panelButton.setText(R.string.add);
     }
 }
