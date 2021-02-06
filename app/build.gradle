@@ -24,6 +24,10 @@ android {
     }
 }
 
+repositories{
+    maven {url 'https://jitpack.io' }
+}
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -38,8 +42,9 @@ dependencies {
     // adding material design dependency
     implementation "com.google.android.material:material:1.2.1"
     // other dependencies
-    implementation 'com.sothree.slidinguppanel:library:3.3.0'
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'com.androidplot:androidplot-core:1.5.7'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.android.support:support-v4:28.0.0'

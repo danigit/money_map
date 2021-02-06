@@ -2,11 +2,13 @@ package com.example.moneymap.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,7 +41,11 @@ public class CategoriesFragment extends Fragment {
     private TextView categoryName;
     private TextView categoryIconImageName;
     private TextView addCategoryButton;
+    boolean isOpened = false;
 
+    public void setListenerToRootView() {
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,11 +85,15 @@ public class CategoriesFragment extends Fragment {
         categoriesAdapter.startListening();
         addCategoriesAdapter.startListening();
 
+        setListenerToRootView();
         categoryName = (TextView) view.findViewById(R.id.category_name);
         categoryIconImageName = (TextView) view.findViewById(R.id.category_icon_name_text_view);
         addCategoryButton = (TextView) view.findViewById(R.id.add_category_button);
 
         addCategoryButton.setOnClickListener(openCategoryPanel());
+
+        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
+        slidingLayout.setTouchEnabled(false);
 
         Button saveCategoryButton = (Button) view.findViewById(R.id.save_category_button);
         saveCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -101,28 +111,20 @@ public class CategoriesFragment extends Fragment {
                     DatabaseReference accountsReference = Utils.databaseReference.child("categories");
                     accountsReference.child(categoryNameString).setValue(category);
 
-                    Context context = getContext();
-                    if (context != null) {
-                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    }
-
+                    Utils.closeKeyboard(v);
                     slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
+
                     addCategoryButton.setText(R.string.add);
+                    addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
                 }
             }
         });
-
-        slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
-        slidingLayout.setTouchEnabled(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
     }
 
     // method that handles the click on the add and close button in the account page
@@ -135,6 +137,7 @@ public class CategoriesFragment extends Fragment {
                     categoryIconImageName.setText("");
                     ((ImageView) getActivity().findViewById(R.id.category_icon_image)).setImageDrawable(null);
 
+                    Utils.closeKeyboard(v);
                     slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                     addCategoryButton.setBackgroundResource(R.drawable.rounded_corners);
                     addCategoryButton.setText(R.string.add);

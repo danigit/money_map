@@ -22,4 +22,5 @@
     <dimen name="dim_large">320dp</dimen>
     <dimen name="dim_x_large">400dp</dimen>
     <dimen name="transaction_radio_buttons">20dp</dimen>
+    <dimen name="plot_height">200dp</dimen>
 </resources>

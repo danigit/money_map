@@ -16,7 +16,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_x_small"
+            android:paddingBottom="@dimen/margin_x_small">
 
             <ImageView
                 android:id="@+id/image"
@@ -34,9 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_x_small"
                 android:textColor="#4CAF50"
-                android:textSize="@dimen/small_size"
+                android:textSize="@dimen/x_small_size"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/image"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +46,7 @@
                 android:id="@+id/account_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/x_small_size"
+                android:textSize="@dimen/xx_small_size"
                 app:layout_constraintStart_toStartOf="@+id/account_title"
                 app:layout_constraintTop_toBottomOf="@+id/account_title" />
 
@@ -55,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_x_small"
                 android:text=""
-                android:textColor="#F44336"
-                android:textSize="@dimen/normal_size"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/medium_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/accounts_currency_label"
                 app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_small"
                 android:text="@string/currency"
-                android:textSize="@dimen/small_size"
+                android:textSize="@dimen/xx_small_size"
                 app:layout_constraintBaseline_toBaselineOf="@+id/account_amount"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

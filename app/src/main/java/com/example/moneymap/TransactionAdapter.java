@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,6 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
 
         Object value = hasInserted.get(date);
         if (value == null){
-            Log.d(Utils.TAG, "object is not null");
             ConstraintLayout transactionDateLayout = ((View) holder.category.getParent().getParent()).findViewById(R.id.transaction_data_container);
             transactionDateLayout.setVisibility(View.VISIBLE);
             TextView day = transactionDateLayout.findViewById(R.id.day_text_view);
@@ -87,8 +87,10 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
 
         if (model.type.equals("income")){
             holder.category.setTextColor(resource.getColor(R.color.colorAccent));
+            holder.icon.setImageDrawable(holder.icon.getResources().getDrawable(R.drawable.income_transaction_icon));
         } else{
             holder.category.setTextColor(resource.getColor(R.color.red_dark_color));
+            ((View)holder.account.getParent()).setBackgroundColor(holder.account.getResources().getColor(R.color.expense_background_color));
         }
 
         holder.account.setText(model.account);
@@ -108,6 +110,7 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
     static class transactionViewHolder extends RecyclerView.ViewHolder{
 
         TextView account, category, note, amount;
+        ImageView icon;
 
         public transactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,6 +119,7 @@ public class TransactionAdapter extends FirebaseRecyclerAdapter<Transaction, Tra
             category = itemView.findViewById(R.id.transaction_category);
             note = itemView.findViewById(R.id.transaction_note);
             amount = itemView.findViewById(R.id.transaction_amount);
+            icon = itemView.findViewById(R.id.transaction_image);
         }
     }
 

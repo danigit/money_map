@@ -1,4 +1,18 @@
 <resources>
+    <string-array name="months_initials">
+        <item>1</item>
+        <item>F</item>
+        <item>M</item>
+        <item>A</item>
+        <item>M</item>
+        <item>J</item>
+        <item>J</item>
+        <item>A</item>
+        <item>S</item>
+        <item>O</item>
+        <item>N</item>
+        <item>D</item>
+    </string-array>
     <string name="app_name">MONEY MAP</string>
 
 
@@ -39,7 +53,7 @@
     <string name="insert_fixed_costs_hint">0</string>
     <string name="insert_maximum_expenses_hint">0</string>
     <string name="zero_value">0</string>
-    <string name="currency">$</string>
+    <string name="currency">\u20ac</string>
     <string name="take_photo_icon">Take Photo Icon</string>
     <string name="account_row_image">Account image</string>
     <string name="accounts_total_label">All accounts</string>
@@ -47,7 +61,7 @@
     <string name="add_category_name_input">Insert Category Name</string>
     <string name="add_account_description_input">Insert description</string>
     <string name="add_account_amount_input">Insert initial amount</string>
-    <string name="save_account_button">Save Account</string>
+    <string name="save_account_button">Save</string>
     <string name="zero">0</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -66,6 +80,7 @@
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="insert_note_hint">Insert note</string>
+    <string name="balance">Balance</string>
 
 
 </resources>

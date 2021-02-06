@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
 
-//        user_fragment = new UserFragment();
         accountFragment = new AccountFragment();
         categoriesFragment = new CategoriesFragment();
         transactionsFragment = new TransactionsFragment();
@@ -124,6 +123,22 @@ public class MainActivity extends AppCompatActivity {
         deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
         insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
         incomeOutcomeRadioGroup = (RadioGroup) findViewById(R.id.income_outcome_radio_group);
+        incomeOutcomeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Spinner categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
+                int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
+                Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
+                if (checkedButton.getText().toString().toLowerCase().equals("income")){
+
+                    categoriesSpinner.setEnabled(false);
+                    categoriesSpinner.setClickable(false);
+                } else if ( checkedButton.getText().toString().toLowerCase().equals("expense")){
+                    categoriesSpinner.setEnabled(true);
+                    categoriesSpinner.setClickable(true);
+                }
+            }
+        });
 
         amountTextView = (TextView) findViewById(R.id.transaction_amount_text_view);
         transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
@@ -142,9 +157,11 @@ public class MainActivity extends AppCompatActivity {
         closePanelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.closeKeyboard(v);
                 slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+
         deleteNumberButton.setOnClickListener(getTransactionInput());
         insertTransactionButton.setOnClickListener(getTransactionInput());
 
@@ -160,9 +177,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
-//                case R.id.user_settings:
-//                    changeFragment(user_fragment);
-//                    break;
                 case R.id.account_management:
                     changeFragment(accountFragment);
                     break;
@@ -186,8 +200,9 @@ public class MainActivity extends AppCompatActivity {
     public void addTransaction(){
 
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        slidingLayout.getChildAt(1).setOnClickListener(null);
+        slidingLayout.setTouchEnabled(false);
         transactionAmountString = "";
+        amountTextView.setText("0");
         transactionNote.setText("");
 
         Utils.databaseReference.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -343,21 +358,39 @@ public class MainActivity extends AppCompatActivity {
                         String account = accountSpinner.getSelectedItem().toString();
                         String category = categoriesSpinner.getSelectedItem().toString();
                         String note = transactionNote.getText().toString();
-                        String type = checkedButton.getText().toString();
+                        final String type = checkedButton.getText().toString();
 
                         if (!transactionAmountString.equals("")) {
                             Date currentTime = Calendar.getInstance().getTime();
                             String day = (String) DateFormat.format("EEEE", currentTime);
-                            String dayNumber = (String) DateFormat.format("dd", currentTime);
+                            String dayNumber = (String) DateFormat.format("d", currentTime);
                             String month = (String) DateFormat.format("MMMM", currentTime);
                             String year = (String) DateFormat.format("yyyy", currentTime);
                             String hours = (String) DateFormat.format("HH", currentTime);
                             String minutes = (String) DateFormat.format("mm", currentTime);
                             String seconds = (String) DateFormat.format("ss", currentTime);
 
-                            String transactionKey = day + dayNumber + month + year + "-" + hours + minutes + seconds;
+                            String transactionKey = day + dayNumber + month + year + "-" + System.currentTimeMillis();
                             TransactionDate transactionDate = new TransactionDate(day, dayNumber, month, year);
                             Transaction transaction = new Transaction(account, category, note, transactionAmountString, type.toLowerCase(), transactionDate);
+                            DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                            final DatabaseReference selectedAccount = accountsReference.child(account).child("amount");
+                            selectedAccount.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    long accountAmount = (long) snapshot.getValue();
+                                    if (type.toLowerCase().equals("expense")) {
+                                        selectedAccount.setValue(accountAmount - Long.parseLong(transactionAmountString));
+                                    } else{
+                                        selectedAccount.setValue(accountAmount + Long.parseLong(transactionAmountString));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
                             transactionsReference.child(transactionKey).setValue(transaction);
 

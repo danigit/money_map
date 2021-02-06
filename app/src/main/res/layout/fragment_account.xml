@@ -34,7 +34,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="@string/accounts_total_label"
                 android:textColor="@color/white"
-                android:textSize="@dimen/small_size"
+                android:textSize="@dimen/x_small_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,9 +52,8 @@
                     android:id="@+id/all_accounts_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100000"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/large_size"
+                    android:textSize="@dimen/normal_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -66,7 +65,7 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/currency"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/normal_size"
+                    android:textSize="@dimen/small_size"
                     app:layout_constraintBaseline_toBaselineOf="@+id/all_accounts_total"
                     app:layout_constraintStart_toEndOf="@+id/all_accounts_total" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -100,11 +99,12 @@
             android:id="@+id/add_account_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x_small"
+            android:layout_marginTop="@dimen/dim_xx_small"
             android:background="@drawable/rounded_corners"
+            android:fontFamily="@font/oswald"
             android:text="@string/add"
             android:textColor="@color/white"
-            android:textSize="@dimen/small_size"
+            android:textSize="@dimen/x_small_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -168,6 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:fontFamily="@font/oswald"
             android:text="@string/save_account_button"
             android:textSize="@dimen/small_size"
             app:iconPadding="4dp"

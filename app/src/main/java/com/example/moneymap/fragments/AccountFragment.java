@@ -87,14 +87,9 @@ public class AccountFragment extends Fragment {
                     DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
                     accountsReference.child(name).setValue(account);
 
-                    Context context = getContext();
-                    if (context != null) {
-                        Log.d(Utils.TAG, "Closing the keyboard");
-                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    }
-
+                    Utils.closeKeyboard(v);
                     slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
                     addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
                     addAccountButton.setText(R.string.add);
                 }
@@ -114,7 +109,10 @@ public class AccountFragment extends Fragment {
 
                     if (account != null) {
                         accountsTotal += account.amount;
-                        accounts_layout.addView(fillAccountRow(account));
+                        Context context = getContext();
+                        if (context != null) {
+                            accounts_layout.addView(fillAccountRow(account, context));
+                        }
                     }
                 }
 
@@ -147,16 +145,17 @@ public class AccountFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (addAccountButton.getText().toString().equals("CLOSE")) {
+                if (slidingLayoutAccount.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     accountDescription.setText("");
                     accountName.setText("");
                     accountAmount.setText("");
 
+                    Utils.closeKeyboard(v);
                     slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
                     addAccountButton.setBackgroundResource(R.drawable.rounded_corners);
                     addAccountButton.setText(R.string.add);
                 } else {
-                    Log.d(Utils.TAG, "Expanding the panel");
                     slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                     addAccountButton.setBackgroundResource(R.drawable.rounded_corners_red);
                     addAccountButton.setText(R.string.close);
@@ -166,17 +165,20 @@ public class AccountFragment extends Fragment {
     }
 
     // method that creates and fill a view which represent an account retrieved from the database
-    public View fillAccountRow(Account account){
-        View layout = LayoutInflater.from(getContext()).inflate(R.layout.account_row, null);
+    public View fillAccountRow(Account account, Context context){
+        View layout = LayoutInflater.from(context).inflate(R.layout.account_row, null);
 
-        TextView title =  layout.findViewById(R.id.account_title);
-        title.setText(account.title);
+        if (layout != null) {
 
-        TextView description =  layout.findViewById(R.id.account_description);
-        description.setText(account.description);
+            TextView title = layout.findViewById(R.id.account_title);
+            title.setText(account.title);
 
-        TextView amount =  layout.findViewById(R.id.account_amount);
-        amount.setText(String.valueOf(account.amount));
+            TextView description = layout.findViewById(R.id.account_description);
+            description.setText(account.description);
+
+            TextView amount = layout.findViewById(R.id.account_amount);
+            amount.setText(String.valueOf(account.amount));
+        }
 
         return layout;
     }
