@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="xx_small_size">7sp</dimen>
     <dimen name="x_small_size">10sp</dimen>
     <dimen name="small_size">12sp</dimen>
     <dimen name="medium_size">16sp</dimen>
@@ -7,19 +8,31 @@
     <dimen name="large_size">24sp</dimen>
     <dimen name="x_large_size">42sp</dimen>
 
-    <dimen name="margin_add_account_input">8dp</dimen>
+    <dimen name="margin_xx_small">3dp</dimen>
     <dimen name="margin_x_small">6dp</dimen>
-    <dimen name="margin_small">16dp</dimen>
-    <dimen name="margin_medium">50dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_medium">32dp</dimen>
     <dimen name="margin_normal">70dp</dimen>
-    <dimen name="margin_large">95dp</dimen>
+    <dimen name="margin_large">80dp</dimen>
+
+    <dimen name="margin_add_account_input">8dp</dimen>
     <dimen name="margin_transactions_recycler">70dp</dimen>
 
+    <dimen name="dim_xx_small">6dp</dimen>
     <dimen name="dim_x_small">14dp</dimen>
     <dimen name="dim_small">20dp</dimen>
     <dimen name="dim_medium">40dp</dimen>
     <dimen name="dim_normal">100dp</dimen>
     <dimen name="dim_large">320dp</dimen>
     <dimen name="dim_x_large">400dp</dimen>
+
     <dimen name="transaction_radio_buttons">30dp</dimen>
+    <dimen name="plot_height">200dp</dimen>
+
+    <dimen name="menu_icons_size">16dp</dimen>
+    <dimen name="design_bottom_navigation_height" tools:override="true">45dp</dimen>
+
+    <dimen name="category_image">24dp</dimen>
+    <dimen name="transaction_image">20dp</dimen>
+    <dimen name="open_panel_image_dim">64dp</dimen>
 </resources>

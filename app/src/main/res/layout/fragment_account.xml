@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/sliding_layout_account"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,6 +76,17 @@
                         app:layout_constraintStart_toEndOf="@+id/all_accounts_total" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <ImageView
+                    android:id="@+id/open_menu_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/menu_icon"
+                    android:contentDescription="@string/add" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ScrollView
@@ -101,26 +112,22 @@
             android:layout_height="match_parent"
             android:background="#FFFFFF">
 
-            <TextView
+            <ImageView
                 android:id="@+id/add_account_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dim_xx_small"
-                android:background="@drawable/rounded_corners"
-                android:fontFamily="@font/oswald"
-                android:text="@string/add"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x_small_size"
+                android:layout_width="@dimen/open_panel_image_dim"
+                android:layout_height="@dimen/open_panel_image_dim"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/open_panel_icon"
+                android:contentDescription="@string/account_row_image" />
 
             <EditText
                 android:id="@+id/account_title_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginTop="@dimen/margin_add_account_input"
+                android:layout_marginTop="@dimen/margin_x_small"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:layout_weight="1"
                 android:autofillHints=""
@@ -171,12 +178,14 @@
 
             <Button
                 android:id="@+id/save_account_button"
+                style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/oswald"
                 android:text="@string/save_account_button"
-                android:textSize="@dimen/small_size"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/medium_size"
                 app:iconPadding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

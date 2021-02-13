@@ -17,44 +17,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.moneymap.Login;
 import com.example.moneymap.R;
 import com.example.moneymap.TransactionDate;
 import com.example.moneymap.Utils;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,10 +80,7 @@ public class OverviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_overview, container, false);
     }
 
@@ -149,11 +129,10 @@ public class OverviewFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d(Utils.TAG, error.getMessage());
             }
         });
 
-        // create a couple arrays of y-values to plot:
         Utils.databaseReference.child("transactions").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -165,7 +144,6 @@ public class OverviewFragment extends Fragment {
                     float amount = Float.parseFloat(transaction.child("amount").getValue().toString());
                     totalAmount += amount;
 
-                    Log.d(Utils.TAG, transaction.child("type").getValue().toString());
                     if (transaction.child("type").getValue().toString().equals("expense")) {
                         TransactionDate transactionDate = transaction.child("transactionDate").getValue(TransactionDate.class);
                         if (transactionDate != null) {
@@ -190,7 +168,6 @@ public class OverviewFragment extends Fragment {
                     }
                 }
 
-                Log.d(Utils.TAG, Currency.getInstance(Locale.ITALY).getSymbol());
                 String balance = String.valueOf(accountsTotal - totalExpenses) + " " + Currency.getInstance(Locale.ITALY).getSymbol();
                 String expenses = String.valueOf(totalExpenses) + " " + Currency.getInstance(Locale.ITALY).getSymbol();
                 String incomes = String.valueOf(totalIncomes) + " " + Currency.getInstance(Locale.ITALY).getSymbol();
@@ -205,7 +182,7 @@ public class OverviewFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d(Utils.TAG, error.getMessage());
             }
 
 
@@ -214,7 +191,6 @@ public class OverviewFragment extends Fragment {
         Utils.databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d(Utils.TAG, snapshot.child("fixed_costs").getValue().toString());
                 profileSavingsGoalText.setText(snapshot.child("savings_goal").getValue().toString());
                 profileFixedCostsText.setText(snapshot.child("fixed_costs").getValue().toString());
                 profileMaxExpensesText.setText(snapshot.child("max_expense").getValue().toString());
@@ -253,6 +229,9 @@ public class OverviewFragment extends Fragment {
         transactionsPlot.refreshDrawableState();
     }
 
+    /**
+     * Method that handles user data updating
+     */
     public View.OnClickListener handleModifyUserInformation = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -268,6 +247,9 @@ public class OverviewFragment extends Fragment {
         }
     };
 
+    /**
+     * Method that handles the user data saving
+     */
     public View.OnClickListener handleSaveUserInformation = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +40,7 @@ public class AccountFragment extends Fragment {
     private TextView accountName;
     private TextView accountDescription;
     private TextView accountAmount;
-    private TextView addAccountButton;
+    private ImageView addAccountButton;
 
     public AccountFragment() {}
 
@@ -55,13 +58,16 @@ public class AccountFragment extends Fragment {
         slidingLayoutAccount = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_account);
         slidingLayoutAccount.setTouchEnabled(false);
 
-        addAccountButton = (TextView) view.findViewById(R.id.add_account_image_button);
+        addAccountButton = (ImageView) view.findViewById(R.id.add_account_image_button);
         accountName = (TextView) view.findViewById(R.id.account_title_input);
         accountDescription = (TextView) view.findViewById(R.id.account_description_input);
         accountAmount = (TextView) view.findViewById(R.id.account_amount_input);
+        ImageView openMenuButton = (ImageView) view.findViewById(R.id.open_menu_button);
 
+        // event listeners
         addAccountButton.setOnClickListener(Utils.openCloseAccountPanel(slidingLayoutAccount, addAccountButton, "accounts"));
-        saveAccountButton.setOnClickListener(addAccountListener());
+        saveAccountButton.setOnClickListener(addAccountListener);
+        openMenuButton.setOnClickListener(openMenu);
 
         final LinearLayout accounts_layout = (LinearLayout) view.findViewById(R.id.accounts_layout);
 
@@ -110,21 +116,29 @@ public class AccountFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
         slidingLayoutAccount.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_account, container, false);
+       return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     /**
-     * Method that handles the insertion of a new account into the database
-     * @return onClickListener
+     * Method handles the side menu opening
      */
-    private View.OnClickListener addAccountListener(){
-        return new View.OnClickListener() {
+    private final View.OnClickListener openMenu = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+        DrawerLayout sideMenuDrawer = (DrawerLayout) getActivity().findViewById(R.id.side_menu_drawer);
+        sideMenuDrawer.openDrawer(GravityCompat.START, true);
+        }
+    };
+
+    /**
+     * Method that handles the insertion of a new account into the database
+     */
+    private final View.OnClickListener addAccountListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 String name = accountName.getText().toString();
@@ -147,8 +161,7 @@ public class AccountFragment extends Fragment {
                     Utils.closePanel(slidingLayoutAccount, addAccountButton);
                 }
             }
-        };
-    }
+    };
 
     /**
      * method that creates and fill a view which represent an account retrieved from the database

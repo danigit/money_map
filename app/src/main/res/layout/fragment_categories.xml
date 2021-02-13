@@ -43,26 +43,22 @@
             android:layout_height="match_parent"
             android:background="#FFFFFF">
 
-            <TextView
+            <ImageView
                 android:id="@+id/add_category_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x_small"
-                android:background="@drawable/rounded_corners"
-                android:fontFamily="@font/oswald"
-                android:text="@string/add"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x_small_size"
+                android:layout_width="@dimen/open_panel_image_dim"
+                android:layout_height="@dimen/open_panel_image_dim"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/open_panel_icon"
+                android:contentDescription="@string/category_image" />
 
             <EditText
                 android:id="@+id/category_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/margin_x_small"
                 android:layout_marginEnd="32dp"
                 android:layout_weight="1"
                 android:autofillHints=""
@@ -70,6 +66,7 @@
                 android:hint="@string/add_account_name_input"
                 android:inputType="textPersonName"
                 android:text=""
+                android:textSize="@dimen/small_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_category_button" />
@@ -84,11 +81,12 @@
 
                 <ImageView
                     android:id="@+id/category_icon_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/category_image"
+                    android:layout_height="@dimen/category_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/category_image" />
 
                 <TextView
                     android:id="@+id/category_icon_name_text_view"
@@ -113,11 +111,14 @@
 
             <Button
                 android:id="@+id/save_category_button"
+                style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/oswald"
                 android:text="@string/save_account_button"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/medium_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/categories_recycler_view" />

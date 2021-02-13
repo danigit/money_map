@@ -3,12 +3,11 @@ package com.example.moneymap;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
+import android.text.method.MetaKeyKeyListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -31,7 +30,12 @@ public class Utils {
     public final static DatabaseReference databaseReference = database.getReference();
 
 
-    public static boolean validatePassword(String password){
+    /**
+     * Method that controls if the password passed as parameter is a valid password
+     * @param password - string containing the password
+     * @return - true if the password is valid, false otherwise
+     */
+    public static boolean isPasswordValid(String password){
         Pattern pattern;
         Matcher matcher;
         // defining the password constraints
@@ -44,6 +48,13 @@ public class Utils {
         return matcher.matches();
     }
 
+    /**
+     * Method that scales the image passed as parameter to the dimensions also passed as parameters
+     * @param image - the image to be scaled
+     * @param imageWidth - the new image width
+     * @param imageHeight - the new image height
+     * @return the scaled image
+     */
     public static Bitmap scaleImage(Bitmap image, int imageWidth, int imageHeight) {
         Matrix matrix = new Matrix();
 
@@ -57,11 +68,23 @@ public class Utils {
         return Bitmap.createBitmap(image, 0, 0, width, height, matrix, true);
     }
 
+    /**
+     * Method that shows a toast message
+     * @param context - the context in which the toast has to be shown
+     * @param message - the message to be shown
+     * @param length - the message duration
+     */
     public static void showToast(Context context, String message, int length){
         Toast.makeText(context, message, length)
             .show();
     }
 
+    /**
+     * Method that shows an error toast message
+     * @param context - the context in which the message has to be shown
+     * @param message - the message of the message
+     * @param length - the duration of the message
+     */
     public static void showErrorToast(Context context, String message, int length){
         Toast errorToast = Toast.makeText(context, message, length);
         TextView v = (TextView) errorToast.getView().findViewById(android.R.id.message);
@@ -71,6 +94,12 @@ public class Utils {
         errorToast.show();
     }
 
+    /**
+     * Method that shows an warning toast message
+     * @param context - the context in which the message has to be shown
+     * @param message - the message of the message
+     * @param length - the duration of the message
+     */
     public static void showWarnToast(Context context, String message, int length){
         Toast errorToast = Toast.makeText(context, message, length);
         TextView v = (TextView) errorToast.getView().findViewById(android.R.id.message);
@@ -80,12 +109,21 @@ public class Utils {
         errorToast.show();
     }
 
+    /**
+     * Method that controls if the device has an active connection
+     * @param context
+     * @return true if the connection is active, false otherwise
+     */
     public static boolean isConnectionActive(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * Method that close the virtual keyboard if opened
+     * @param v
+     */
     public static void closeKeyboard(View v){
         Context context = v.getContext();
         if (context != null) {
@@ -98,7 +136,7 @@ public class Utils {
      * method that handles the click on the add and close button in the account page
      * @return onClickListener
      */
-    public static View.OnClickListener openCloseAccountPanel(final SlidingUpPanelLayout slidingPanel, final TextView openButton, final String section){
+    public static View.OnClickListener openCloseAccountPanel(final SlidingUpPanelLayout slidingPanel, final ImageView openButton, final String section){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,8 +146,7 @@ public class Utils {
                     Utils.closePanel(slidingPanel, openButton);
                 } else {
                     slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                    openButton.setBackgroundResource(R.drawable.rounded_corners_red);
-                    openButton.setText(R.string.close);
+                    openButton.setImageResource(R.drawable.close_panel_icon);
 
                     // cleaning the panels
                     switch (section){
@@ -129,9 +166,17 @@ public class Utils {
         };
     }
 
-    public static void closePanel(SlidingUpPanelLayout panel, TextView panelButton){
-        panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        panelButton.setBackgroundResource(R.drawable.rounded_corners);
-        panelButton.setText(R.string.add);
+    /**
+     * Method that close the SlidingUpPanel passed as parameter
+     * @param panel - the panel to be closed
+     * @param panelButton - the button to be updated
+     */
+    public static void closePanel(SlidingUpPanelLayout panel, ImageView panelButton){
+        if (panel != null)
+            panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+        if (panelButton != null) {
+            panelButton.setImageResource(R.drawable.open_panel_icon);
+        }
     }
 }

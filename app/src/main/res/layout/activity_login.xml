@@ -93,6 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:fontFamily="@font/oswald"
         android:text="@string/login_label"
         android:textSize="@dimen/small_size"
         app:layout_constraintEnd_toEndOf="parent"

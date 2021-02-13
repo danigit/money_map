@@ -61,7 +61,7 @@
     <string name="add_category_name_input">Insert Category Name</string>
     <string name="add_account_description_input">Insert description</string>
     <string name="add_account_amount_input">Insert initial amount</string>
-    <string name="save_account_button">Save</string>
+    <string name="save_account_button">SAVE</string>
     <string name="zero">0</string>
     <string name="one">1</string>
     <string name="two">2</string>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
+    android:layout_gravity="start"
     tools:context=".MainActivity">
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -26,17 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/logout_button_text"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <FrameLayout
                 android:id="@+id/fl_wrapper"
                 android:layout_width="match_parent"
@@ -48,6 +37,9 @@
                 android:id="@+id/bottom_navigation_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:itemIconSize="@dimen/menu_icons_size"
+                app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
+                app:itemTextAppearanceInactive="@style/BottomNavigationView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:menu="@menu/navigation_menu" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -60,29 +52,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <ImageView
                 android:id="@+id/cancel_transaction_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x_small"
-                android:background="@drawable/rounded_corners_red"
-                android:text="@string/close"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x_small_size"
+                android:layout_width="@dimen/open_panel_image_dim"
+                android:layout_height="@dimen/open_panel_image_dim"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/close_panel_icon"
+                android:contentDescription="@string/insert_transaction" />
 
             <LinearLayout
                 android:id="@+id/x"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dim_small"
+                android:layout_marginTop="@dimen/margin_small"
                 android:orientation="horizontal"
                 android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cancel_transaction_button">
+                app:layout_constraintTop_toBottomOf="@+id/cancel_transaction_button"
+                android:baselineAligned="false">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
@@ -109,10 +99,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_x_small"
+                        android:layout_marginTop="@dimen/margin_xx_small"
+                        android:layout_marginBottom="@dimen/margin_xx_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/transactions_account_image" />
+                        app:srcCompat="@drawable/transactions_account_image"
+                        android:contentDescription="@string/account_row_image" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -140,6 +133,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_x_small"
+                        android:layout_marginTop="@dimen/margin_xx_small"
+                        android:layout_marginBottom="@dimen/margin_xx_small"
+                        android:contentDescription="@string/category_image"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -192,7 +188,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                android:autofillHints="" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout4"
@@ -222,7 +219,7 @@
                         android:layout_width="@dimen/dim_normal"
                         android:layout_height="@dimen/transaction_radio_buttons"
                         android:layout_weight="1"
-                        android:background="@drawable/radio_flat_selector"
+                        android:background="@drawable/radio_flat_expense_selector"
                         android:button="@android:color/transparent"
                         android:checked="true"
                         android:gravity="center"
@@ -419,6 +416,7 @@
                     android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_x_small"
                     android:layout_marginEnd="@dimen/margin_small"
+                    android:fontFamily="@font/oswald"
                     android:text="@string/insert_transaction"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/normal_size"
@@ -438,34 +436,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/fragment_user"
-        app:menu="@menu/navigation_menu">
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/profile_image"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="@dimen/margin_medium"-->
-<!--                android:contentDescription="@string/profile_photo_label"-->
-<!--                android:src="@drawable/profile_image"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/take_profile_image_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:contentDescription="@string/take_photo_icon"-->
-<!--                android:src="@drawable/take_photo_icon"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/profile_image" />-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-    </com.google.android.material.navigation.NavigationView>
+        app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

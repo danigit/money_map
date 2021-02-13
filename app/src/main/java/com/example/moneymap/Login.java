@@ -111,6 +111,9 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
     }
 
+    /**
+     * Method that handles the login
+     */
     private final View.OnClickListener handleLoginUser = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -127,7 +130,7 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                 return;
             }
 
-            if (!Utils.validatePassword(passwordString)){
+            if (!Utils.isPasswordValid(passwordString)){
                 password.setError("At least 6 character (upper/lower letters and numbers)");
                 return;
             }
@@ -153,7 +156,6 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
                             }
                         } else {
                             if (task.getException() != null) {
-                                Log.d(Utils.TAG, task.getException().getLocalizedMessage());
                                 if (Objects.equals(task.getException().getLocalizedMessage(), "The email address is badly formatted."))
                                     email.setError("Email malformed or not registered");
                                 else
@@ -168,6 +170,9 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
     };
 
+    /**
+     * Method tha handles the login with google sign in
+     */
     private final View.OnClickListener handleLoginWithGoogle = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -175,6 +180,9 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
     };
 
+    /**
+     * Method that handles the registration page switch
+     */
     private final View.OnClickListener handleRegister = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -182,6 +190,10 @@ public class Login extends AppCompatActivity implements OnConnectionFailedListen
         }
     };
 
+    /**
+     * Method that controls if the login is successful and enters to the restricted area
+     * @param result
+     */
     public void handleSignInResult(Task<GoogleSignInAccount> result){
         if (result != null && result.isSuccessful()){
             startActivity(new Intent(getApplicationContext(), MainActivity.class));

@@ -88,14 +88,14 @@
 
                 <ImageView
                     android:id="@+id/transaction_image"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/transaction_image"
+                    android:layout_height="@dimen/transaction_image"
                     android:layout_marginStart="8dp"
+                    android:contentDescription="@string/category_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/expense_transaction_icon"
-                    android:contentDescription="@string/category_image" />
+                    app:srcCompat="@drawable/expense_transaction_icon" />
 
                 <TextView
                     android:id="@+id/transaction_category"

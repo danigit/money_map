@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,7 +33,6 @@ import com.example.moneymap.fragments.AccountFragment;
 import com.example.moneymap.fragments.CategoriesFragment;
 import com.example.moneymap.fragments.OverviewFragment;
 import com.example.moneymap.fragments.TransactionsFragment;
-import com.example.moneymap.fragments.UserFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -57,39 +55,23 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int CAMERA_PICTURE = 0;
 
-    FirebaseAuth firebaseAuth;
-    private UserFragment user_fragment;
     private AccountFragment accountFragment;
     private CategoriesFragment categoriesFragment;
     private TransactionsFragment transactionsFragment;
     private OverviewFragment overviewFragment;
-    private String transactionAmountString = "";
-    private Button zeroButton;
-    private Button oneButton;
-    private Button twoButton;
-    private Button threeButton;
-    private Button fourButton;
-    private Button fiveButton;
-    private Button sixButton;
-    private Button sevenButton;
-    private Button eightButton;
-    private Button nineButton;
-    private Button commaButton;
-    private Button deleteNumberButton;
-    private TextView closePanelButton;
-    private Button insertTransactionButton;
-    private Spinner accountSpinner;
-    private Spinner categoriesSpinner;
+    private String transactionAmountString;
+    private String applicationPath;
     private TextView amountTextView;
+    private Spinner categoriesSpinner;
     private EditText transactionNote;
     private SlidingUpPanelLayout slidingLayout;
     private RadioGroup incomeOutcomeRadioGroup;
-    private static final int CAMERA_PICTURE = 0;
-    private String applicationPath;
     private ImageView userImage;
-    private NavigationView sideMenuView;
     private DrawerLayout sideMenuDrawer;
+    private NavigationView sideMenuView;
+    private BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -97,122 +79,66 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
-
         accountFragment = new AccountFragment();
         categoriesFragment = new CategoriesFragment();
         transactionsFragment = new TransactionsFragment();
         overviewFragment = new OverviewFragment();
 
-        bottomNavigationView.getMenu().getItem(3).setChecked(true);
-        changeFragment(transactionsFragment);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
-        sideMenuView = (NavigationView) findViewById(R.id.side_menu);
         sideMenuDrawer = (DrawerLayout) findViewById(R.id.side_menu_drawer);
-
-        applicationPath = getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/";
-
-        userImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.profile_image);
-
-        ImageView changeProfileImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.take_profile_image_button);
-
-        if (getUserImage() != null) {
-            userImage.setImageBitmap(getUserImage());
-        } else{
-            Utils.showToast(getApplicationContext(), "Unable to find the user image", Toast.LENGTH_SHORT);
-        }
-
-        changeProfileImage.setOnClickListener(handleTakePhoto);
-
-        sideMenuView.setNavigationItemSelectedListener(handleLeftMenuFragments);
-//        AppBarConfiguration appBarConfiguration =
-//                new AppBarConfiguration.Builder(navController.getGraph())
-//                        .setDrawerLayout(drawerLayout)
-//                        .build();
-
-        // TODO this is temporary
-        Button logout = (Button) findViewById(R.id.logout);
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        final GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // here I'm not doing any control, I just want to logout
-                firebaseAuth.signOut();
-                googleSignInClient.signOut();
-                finish();
-            }
-        });
-
-        zeroButton = (Button) findViewById(R.id.zero_button);
-        oneButton = (Button) findViewById(R.id.one_button);
-        twoButton = (Button) findViewById(R.id.two_button);
-        threeButton = (Button) findViewById(R.id.three_button);
-        fourButton = (Button) findViewById(R.id.four_button);
-        fiveButton = (Button) findViewById(R.id.five_button);
-        sixButton = (Button) findViewById(R.id.six_button);
-        sevenButton = (Button) findViewById(R.id.seven_button);
-        eightButton = (Button) findViewById(R.id.eight_button);
-        nineButton = (Button) findViewById(R.id.nine_button);
-        commaButton = (Button) findViewById(R.id.comma_button);
-        closePanelButton = (TextView) findViewById(R.id.cancel_transaction_button);
-        deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
-        insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
-        incomeOutcomeRadioGroup = (RadioGroup) findViewById(R.id.income_outcome_radio_group);
-        incomeOutcomeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Spinner categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
-                int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
-                Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
-                if (checkedButton.getText().toString().toLowerCase().equals("income")){
-
-                    categoriesSpinner.setEnabled(false);
-                    categoriesSpinner.setClickable(false);
-                } else if ( checkedButton.getText().toString().toLowerCase().equals("expense")){
-                    categoriesSpinner.setEnabled(true);
-                    categoriesSpinner.setClickable(true);
-                }
-            }
-        });
-
         amountTextView = (TextView) findViewById(R.id.transaction_amount_text_view);
         transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
+        incomeOutcomeRadioGroup = (RadioGroup) findViewById(R.id.income_outcome_radio_group);
+        sideMenuView = (NavigationView) findViewById(R.id.side_menu);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
 
-        zeroButton.setOnClickListener(getTransactionInput());
-        oneButton.setOnClickListener(getTransactionInput());
-        twoButton.setOnClickListener(getTransactionInput());
-        threeButton.setOnClickListener(getTransactionInput());
-        fourButton.setOnClickListener(getTransactionInput());
-        fiveButton.setOnClickListener(getTransactionInput());
-        sixButton.setOnClickListener(getTransactionInput());
-        sevenButton.setOnClickListener(getTransactionInput());
-        eightButton.setOnClickListener(getTransactionInput());
-        nineButton.setOnClickListener(getTransactionInput());
-        commaButton.setOnClickListener(getTransactionInput());
-        closePanelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.closeKeyboard(v);
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
-        });
+        ImageView changeProfileImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.take_profile_image_button);
+        Button insertTransactionButton = (Button) findViewById(R.id.insert_transaction_button);
+        Button zeroButton = (Button) findViewById(R.id.zero_button);
+        Button oneButton = (Button) findViewById(R.id.one_button);
+        Button twoButton = (Button) findViewById(R.id.two_button);
+        Button threeButton = (Button) findViewById(R.id.three_button);
+        Button fourButton = (Button) findViewById(R.id.four_button);
+        Button fiveButton = (Button) findViewById(R.id.five_button);
+        Button sixButton = (Button) findViewById(R.id.six_button);
+        Button sevenButton = (Button) findViewById(R.id.seven_button);
+        Button eightButton = (Button) findViewById(R.id.eight_button);
+        Button nineButton = (Button) findViewById(R.id.nine_button);
+        Button commaButton = (Button) findViewById(R.id.comma_button);
+        Button deleteNumberButton = (Button) findViewById(R.id.cancel_number_button);
+        ImageView closePanelButton = (ImageView) findViewById(R.id.cancel_transaction_button);
 
-        deleteNumberButton.setOnClickListener(getTransactionInput());
-        insertTransactionButton.setOnClickListener(getTransactionInput());
+        // event listeners
+        zeroButton.setOnClickListener(getTransactionInput);
+        oneButton.setOnClickListener(getTransactionInput);
+        twoButton.setOnClickListener(getTransactionInput);
+        threeButton.setOnClickListener(getTransactionInput);
+        fourButton.setOnClickListener(getTransactionInput);
+        fiveButton.setOnClickListener(getTransactionInput);
+        sixButton.setOnClickListener(getTransactionInput);
+        sevenButton.setOnClickListener(getTransactionInput);
+        eightButton.setOnClickListener(getTransactionInput);
+        nineButton.setOnClickListener(getTransactionInput);
+        commaButton.setOnClickListener(getTransactionInput);
+        deleteNumberButton.setOnClickListener(getTransactionInput);
+        changeProfileImage.setOnClickListener(handleTakePhoto);
+        insertTransactionButton.setOnClickListener(getTransactionInput);
+        closePanelButton.setOnClickListener(closePanel);
+        sideMenuView.setNavigationItemSelectedListener(handleLeftMenuFragments);
+        bottomNavigationView.setOnNavigationItemSelectedListener(handleFragments);
+        incomeOutcomeRadioGroup.setOnCheckedChangeListener(incomeOutcomeHandler);
 
+        applicationPath = getApplicationInfo().dataDir + "/app_" + Utils.applicationDirectory + "/";
+        userImage = (ImageView) sideMenuView.getHeaderView(0).findViewById(R.id.profile_image);
+        bottomNavigationView.getMenu().getItem(3).setChecked(true);
+
+        changeFragment(transactionsFragment);
+        setUserImage();
+        logout();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode, resultCode, result);
-
-
 
         if (requestCode == CAMERA_PICTURE){
             if (resultCode == Activity.RESULT_OK){
@@ -221,26 +147,17 @@ public class MainActivity extends AppCompatActivity {
                     final Bitmap imageBitmap = (Bitmap) cameraImage.get("data");
 
                     if (imageBitmap != null) {
-                        Bitmap newBitmap;
-                        float density = getResources().getDisplayMetrics().density;
-
-                        if (density <= 2) {
-                            newBitmap = Utils.scaleImage(imageBitmap, 150, 150);
-                        } else {
-                            newBitmap = Utils.scaleImage(imageBitmap, 450, 450);
-                        }
-
+                        Bitmap newBitmap = preprocessImage(imageBitmap);
                         userImage.setImageBitmap(newBitmap);
-
                         boolean imageSaved = saveUserImage(newBitmap);
 
                         if (imageSaved){
-                            Utils.showToast(getApplicationContext(), "Image saved to the device", Toast.LENGTH_SHORT);
+                            Utils.showToast(getApplicationContext(), "Image saved to the device!", Toast.LENGTH_SHORT);
                         } else {
-                            Utils.showToast(getApplicationContext(), "Could not save the image", Toast.LENGTH_SHORT);
+                            Utils.showToast(getApplicationContext(), "Could not save the image!", Toast.LENGTH_SHORT);
                         }
                     } else {
-                        Utils.showToast(getApplicationContext(), "Could not take the picture", Toast.LENGTH_SHORT);
+                        Utils.showToast(getApplicationContext(), "Could not take the picture!", Toast.LENGTH_SHORT);
                     }
                 } else{
                     Utils.showToast(getApplicationContext(), "Could not take the picture!", Toast.LENGTH_SHORT);
@@ -251,13 +168,105 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (this.accountFragment.isVisible()){
+        SlidingUpPanelLayout slidingLayoutAccount = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout_account);
+        SlidingUpPanelLayout slidingLayoutCategories = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout_categories);
 
-            Log.d(Utils.TAG, "account fragment visible");
+        if(slidingLayout != null && slidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else if (this.accountFragment.isVisible() && isPanelOpen(slidingLayoutAccount)){
+            ImageView addAccountButton = (ImageView) findViewById(R.id.add_account_image_button);
+            Utils.closePanel(slidingLayoutAccount, addAccountButton);
+        } else if (this.categoriesFragment.isVisible() && isPanelOpen(slidingLayoutCategories)){
+            ImageView addAccountButton = (ImageView) findViewById(R.id.add_category_button);
+            Utils.closePanel(slidingLayoutCategories, addAccountButton);
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
+    /**
+     * Method that controls the state of the panel passed as parameter
+     * @param panel - the panel that has to be controlled
+     * @return true if the panel is opened, false otherwise
+     */
+    private boolean isPanelOpen(SlidingUpPanelLayout panel){
+        return panel != null && panel.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
+    }
+
+    /**
+     * Method that scales the image based on the device density
+     * @param image - image to be scaled
+     * @return scaled image
+     */
+    public Bitmap preprocessImage(Bitmap image) {
+        float density = getResources().getDisplayMetrics().density;
+
+        if (density <= 2) {
+            return Utils.scaleImage(image, 150, 150);
+        } else {
+            return Utils.scaleImage(image, 450, 450);
+        }
+    }
+
+    /**
+     * Method that set the user image
+     */
+    public void setUserImage() {
+        if (getUserImage() != null) {
+            userImage.setImageBitmap(getUserImage());
+        } else{
+            Utils.showToast(getApplicationContext(), "Unable to find the user image", Toast.LENGTH_SHORT);
+        }
+    }
+
+    /**
+     * Logging out from the application
+     */
+    public void logout() {
+        Button logout = (Button) sideMenuView.getHeaderView(0).findViewById(R.id.logout_button);
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        final GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                firebaseAuth.signOut();
+                googleSignInClient.signOut();
+                startActivity(new Intent(getApplicationContext(), Login.class));
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Method that handles the closing for the add transaction panel
+     */
+    public View.OnClickListener closePanel = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Utils.closeKeyboard(v);
+            Utils.closePanel(slidingLayout, null);
+        }
+    };
+
+    /**
+     * Method that handles the selection of the type of transaction
+     */
+    public RadioGroup.OnCheckedChangeListener incomeOutcomeHandler = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
+            Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
+            String selectedType = checkedButton.getText().toString().toLowerCase();
+            disableCategoriesForIncomeTransaction(selectedType);
+        }
+    };
+
+    /**
+     * Method that handles the capturing of a new photo
+     */
     public View.OnClickListener handleTakePhoto = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -266,14 +275,240 @@ public class MainActivity extends AppCompatActivity {
             try {
                 startActivityForResult(cameraIntent, CAMERA_PICTURE);
             } catch (SecurityException e) {
-                requestPermissions(new String[]{
-                                Manifest.permission.CAMERA
-                        }, 1
-                );
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
             }
         }
     };
 
+    /**
+     * Method that handles the bottom bar click events
+     */
+    public BottomNavigationView.OnNavigationItemSelectedListener handleFragments = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.account_management:
+                    changeFragment(accountFragment);
+                    break;
+                case R.id.categories:
+                    changeFragment(categoriesFragment);
+                    break;
+                case R.id.add_transaction:
+                    categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
+                    addTransaction();
+                    break;
+                case R.id.transactions:
+                    changeFragment(transactionsFragment);
+                    break;
+                case R.id.overview:
+                    changeFragment(overviewFragment);
+                    break;
+            }
+            return true;
+        }
+    };
+
+    /**
+     * Method that handles the side menu event clicks
+     */
+    public NavigationView.OnNavigationItemSelectedListener handleLeftMenuFragments = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.account_management:
+                    changeFragment(accountFragment);
+                    bottomNavigationView.getMenu().getItem(0).setChecked(true);
+                    break;
+                case R.id.categories:
+                    changeFragment(categoriesFragment);
+                    bottomNavigationView.getMenu().getItem(1).setChecked(true);
+                    break;
+                case R.id.add_transaction:
+                    categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
+                    addTransaction();
+                    break;
+                case R.id.transactions:
+                    changeFragment(transactionsFragment);
+                    bottomNavigationView.getMenu().getItem(3).setChecked(true);
+                    break;
+                case R.id.overview:
+                    changeFragment(overviewFragment);
+                    bottomNavigationView.getMenu().getItem(4).setChecked(true);
+                    break;
+            }
+
+            sideMenuDrawer.closeDrawer(GravityCompat.START, false);
+            return true;
+        }
+    };
+
+    /**
+     * Method that handles the transaction input
+     */
+    public View.OnClickListener getTransactionInput = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int buttonId = v.getId();
+            String tempAmount = transactionAmountString;
+            switch (buttonId){
+                case R.id.zero_button:
+                    tempAmount += "0";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.one_button:
+                    tempAmount += "1";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.two_button:
+                    tempAmount += "2";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.three_button:
+                    tempAmount += "3";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.four_button:
+                    tempAmount += "4";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.five_button:
+                    tempAmount += "5";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.six_button:
+                    tempAmount += "6";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.seven_button:
+                    tempAmount += "7";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.eight_button:
+                    tempAmount += "8";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.nine_button:
+                    tempAmount += "9";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString = tempAmount;
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.comma_button:
+                    tempAmount += ".0";
+                    if (validAmount(tempAmount)) {
+                        transactionAmountString += ".";
+                        amountTextView.setText(transactionAmountString);
+                    }
+                    break;
+                case R.id.cancel_number_button:
+                    transactionAmountString = transactionAmountString.substring(0, transactionAmountString.length() - 1);
+                    amountTextView.setText(transactionAmountString);
+                    break;
+                case R.id.insert_transaction_button:
+                    Spinner accountSpinner = (Spinner) findViewById(R.id.account_spinner);
+                    transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
+
+                    int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
+                    Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
+
+                    String account = accountSpinner.getSelectedItem().toString();
+                    String category = categoriesSpinner.getSelectedItem().toString();
+                    String note = transactionNote.getText().toString();
+                    final String type = checkedButton.getText().toString();
+
+                    if (!transactionAmountString.equals("")) {
+                        Date currentTime = Calendar.getInstance().getTime();
+                        String day = (String) DateFormat.format("EEEE", currentTime);
+                        String dayNumber = (String) DateFormat.format("d", currentTime);
+                        String month = (String) DateFormat.format("MMMM", currentTime);
+                        String year = (String) DateFormat.format("yyyy", currentTime);
+
+                        String transactionKey = day + dayNumber + month + year + "-" + System.currentTimeMillis();
+                        TransactionDate transactionDate = new TransactionDate(day, dayNumber, month, year);
+                        Transaction transaction = new Transaction(account, category, note, transactionAmountString, type.toLowerCase(), transactionDate);
+                        DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
+                        final DatabaseReference selectedAccount = accountsReference.child(account).child("amount");
+
+                        selectedAccount.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                long accountAmount = (long) snapshot.getValue();
+                                if (type.toLowerCase().equals("expense")) {
+                                    selectedAccount.setValue(accountAmount - Long.parseLong(transactionAmountString));
+                                } else{
+                                    selectedAccount.setValue(accountAmount + Long.parseLong(transactionAmountString));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(Utils.TAG, error.getMessage());
+                            }
+                        });
+
+                        DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
+                        transactionsReference.child(transactionKey).setValue(transaction);
+
+                        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+                        bottomNavigationView.getMenu().getItem(3).setChecked(true);
+                        changeFragment(transactionsFragment);
+                    } else {
+                        Utils.showToast(v.getContext(), "Insert an amount", Toast.LENGTH_SHORT);
+                    }
+                    break;
+            }
+        }
+    };
+
+    /**
+     * Method that disable the categories spinner if the transaction is of type income, and
+     * activates it if the transaction if of type expense
+     * @param selectedType the radio button that is selected
+     */
+    public void disableCategoriesForIncomeTransaction(String selectedType){
+        if (selectedType.equals("income")){
+            categoriesSpinner.setEnabled(false);
+            categoriesSpinner.setClickable(false);
+        } else if (selectedType.equals("expense")){
+            categoriesSpinner.setEnabled(true);
+            categoriesSpinner.setClickable(true);
+        }
+    }
+
+    /**
+     * Method that save the image passed as parameter to the device
+     * @param image - the image to be saved
+     * @return true if the image was saved, false otherwise
+     */
     public boolean saveUserImage(Bitmap image){
         File fileDirectory = getApplicationContext().getDir(Utils.applicationDirectory, Context.MODE_PRIVATE);
         File imageFile = new File(fileDirectory, Utils.userImageName + ".jpeg");
@@ -293,10 +528,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             } else {
-                requestPermissions(new String[] {
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        1
-                );
+                requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -312,79 +544,34 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Method that gets the user image from the device if already saved
+     * @return the user image if present, null otherwise
+     */
     public Bitmap getUserImage(){
         Bitmap image = null;
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             image = BitmapFactory.decodeFile(applicationPath + Utils.userImageName + ".jpeg");
         } else {
-            requestPermissions(new String[] {
-                            Manifest.permission.READ_EXTERNAL_STORAGE},
-                    1
-            );
+            requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE},1);
         }
         return image;
     }
 
+    /**
+     * Methods that handles the switch among the fragments
+     * @param fragment - the fragment to be shown
+     */
     public void changeFragment(Fragment fragment){
        getSupportFragmentManager().beginTransaction()
                .replace(R.id.fl_wrapper, fragment, null)
                .commit();
     }
 
-    public BottomNavigationView.OnNavigationItemSelectedListener handleFragments = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
-                case R.id.account_management:
-                    changeFragment(accountFragment);
-                    break;
-                case R.id.categories:
-                    changeFragment(categoriesFragment);
-                    break;
-                case R.id.add_transaction:
-                    addTransaction();
-                    break;
-                case R.id.transactions:
-                    changeFragment(transactionsFragment);
-                    break;
-                case R.id.overview:
-                    changeFragment(overviewFragment);
-                    break;
-            }
-            return true;
-        }
-    };
-
-    public NavigationView.OnNavigationItemSelectedListener handleLeftMenuFragments = new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
-                case R.id.account_management:
-                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
-                    changeFragment(accountFragment);
-                    break;
-                case R.id.categories:
-                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
-                    changeFragment(categoriesFragment);
-                    break;
-                case R.id.add_transaction:
-                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
-                    addTransaction();
-                    break;
-                case R.id.transactions:
-                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
-                    changeFragment(transactionsFragment);
-                    break;
-                case R.id.overview:
-                    sideMenuDrawer.closeDrawer(GravityCompat.START, false);
-                    changeFragment(overviewFragment);
-                    break;
-            }
-            return true;
-        }
-    };
-
+    /**
+     * Method that inserts a new transaction in the database
+     */
     public void addTransaction(){
 
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
@@ -399,10 +586,10 @@ public class MainActivity extends AppCompatActivity {
 
                 final List<String> categoriesList = new ArrayList<String>();
 
-                for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
-                    String propertyAddress = addressSnapshot.child("name").getValue(String.class);
-                    if (propertyAddress!=null){
-                        categoriesList.add(propertyAddress);
+                for (DataSnapshot category: snapshot.getChildren()) {
+                    String categoryName = category.child("name").getValue(String.class);
+                    if (categoryName != null){
+                        categoriesList.add(categoryName);
                     }
                 }
 
@@ -414,7 +601,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(Utils.TAG, error.getMessage());
             }
         });
 
@@ -424,10 +611,10 @@ public class MainActivity extends AppCompatActivity {
 
                 final List<String> accountsList = new ArrayList<String>();
 
-                for (DataSnapshot addressSnapshot: snapshot.getChildren()) {
-                    String propertyAddress = addressSnapshot.child("title").getValue(String.class);
-                    if (propertyAddress!=null){
-                        accountsList.add(propertyAddress);
+                for (DataSnapshot account: snapshot.getChildren()) {
+                    String accountTitle = account.child("title").getValue(String.class);
+                    if (accountTitle != null){
+                        accountsList.add(accountTitle);
                     }
                 }
 
@@ -439,159 +626,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(Utils.TAG, error.getMessage());
             }
         });
-
 
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
-    public View.OnClickListener getTransactionInput(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int buttonId = v.getId();
-                String tempAmount = transactionAmountString;
-                switch (buttonId){
-                    case R.id.zero_button:
-                        tempAmount += "0";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.one_button:
-                        tempAmount += "1";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.two_button:
-                        tempAmount += "2";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.three_button:
-                        tempAmount += "3";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.four_button:
-                        tempAmount += "4";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.five_button:
-                        tempAmount += "5";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.six_button:
-                        tempAmount += "6";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.seven_button:
-                        tempAmount += "7";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.eight_button:
-                        tempAmount += "8";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.nine_button:
-                        tempAmount += "9";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString = tempAmount;
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.comma_button:
-                        tempAmount += ".0";
-                        if (validAmount(tempAmount)) {
-                            transactionAmountString += ".";
-                            amountTextView.setText(transactionAmountString);
-                        }
-                        break;
-                    case R.id.cancel_number_button:
-                        Log.d(Utils.TAG, "cancelling the number");
-                        transactionAmountString = transactionAmountString.substring(0, transactionAmountString.length() - 1);
-                        amountTextView.setText(transactionAmountString);
-                        break;
-                    case R.id.insert_transaction_button:
-                        accountSpinner = (Spinner) findViewById(R.id.account_spinner);
-                        categoriesSpinner = (Spinner) findViewById(R.id.categories_spinner);
-                        transactionNote = (EditText) findViewById(R.id.transaction_note_input2);
-                        int checkedButtonSelectedId = incomeOutcomeRadioGroup.getCheckedRadioButtonId();
-                        Button checkedButton = (Button) findViewById(checkedButtonSelectedId);
-
-                        String account = accountSpinner.getSelectedItem().toString();
-                        String category = categoriesSpinner.getSelectedItem().toString();
-                        String note = transactionNote.getText().toString();
-                        final String type = checkedButton.getText().toString();
-
-                        if (!transactionAmountString.equals("")) {
-                            Date currentTime = Calendar.getInstance().getTime();
-                            String day = (String) DateFormat.format("EEEE", currentTime);
-                            String dayNumber = (String) DateFormat.format("d", currentTime);
-                            String month = (String) DateFormat.format("MMMM", currentTime);
-                            String year = (String) DateFormat.format("yyyy", currentTime);
-                            String hours = (String) DateFormat.format("HH", currentTime);
-                            String minutes = (String) DateFormat.format("mm", currentTime);
-                            String seconds = (String) DateFormat.format("ss", currentTime);
-
-                            String transactionKey = day + dayNumber + month + year + "-" + System.currentTimeMillis();
-                            TransactionDate transactionDate = new TransactionDate(day, dayNumber, month, year);
-                            Transaction transaction = new Transaction(account, category, note, transactionAmountString, type.toLowerCase(), transactionDate);
-                            DatabaseReference accountsReference = Utils.databaseReference.child("accounts");
-                            final DatabaseReference selectedAccount = accountsReference.child(account).child("amount");
-                            selectedAccount.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    long accountAmount = (long) snapshot.getValue();
-                                    if (type.toLowerCase().equals("expense")) {
-                                        selectedAccount.setValue(accountAmount - Long.parseLong(transactionAmountString));
-                                    } else{
-                                        selectedAccount.setValue(accountAmount + Long.parseLong(transactionAmountString));
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                            DatabaseReference transactionsReference = Utils.databaseReference.child("transactions");
-                            transactionsReference.child(transactionKey).setValue(transaction);
-
-                            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                        } else {
-                            Utils.showToast(v.getContext(), "Insert an amount", Toast.LENGTH_SHORT);
-                        }
-                        break;
-                }
-            }
-        };
-    }
-
+    /**
+     * Method that controls if the transaction amount is valid
+     * @param amount - the amount to be controlled
+     * @return true if the amount is a valid number, false otherwise
+     */
     public boolean validAmount(String amount){
         boolean match = false;
         if (amount != null) {

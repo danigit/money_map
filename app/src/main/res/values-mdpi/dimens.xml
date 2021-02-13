@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="xx_small_size">10sp</dimen>
     <dimen name="x_small_size">12sp</dimen>
     <dimen name="small_size">18sp</dimen>
@@ -28,4 +28,11 @@
 
     <dimen name="transaction_radio_buttons">40dp</dimen>
     <dimen name="plot_height">300dp</dimen>
+
+    <dimen name="menu_icons_size">20dp</dimen>
+    <dimen name="design_bottom_navigation_height" tools:override="true">55dp</dimen>
+
+    <dimen name="category_image">48dp</dimen>
+    <dimen name="transaction_image">30dp</dimen>
+    <dimen name="open_panel_image_dim">64dp</dimen>
 </resources>

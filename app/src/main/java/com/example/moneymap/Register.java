@@ -49,6 +49,9 @@ public class Register extends AppCompatActivity {
         ((TextView) findViewById(R.id.go_to_login_label)).setOnClickListener(goToLogin);
     }
 
+    /**
+     * Method that handles the user registration
+     */
     private final View.OnClickListener handleRegisterUser = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -66,7 +69,7 @@ public class Register extends AppCompatActivity {
                 return;
             }
 
-            if (!Utils.validatePassword(passwordString)){
+            if (!Utils.isPasswordValid(passwordString)){
                 password.setError("At least 6 character (upper/lower letters and numbers)");
                 return;
             }
@@ -96,7 +99,7 @@ public class Register extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
                                                 Utils.showWarnToast(Register.this, "Please check your email for verification", Toast.LENGTH_SHORT);
-                                                // finishing the activity so that I cannot go back to register if the user is
+                                                // closing the activity so that I cannot go back to register if the user is
                                                 // already logged
                                                 finish();
                                             } else{
@@ -118,6 +121,9 @@ public class Register extends AppCompatActivity {
         }
     };
 
+    /**
+     * Method that handles the switch to the login page
+     */
     private final View.OnClickListener goToLogin = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

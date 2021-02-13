@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +34,7 @@ public class CategoriesFragment extends Fragment {
     private SlidingUpPanelLayout slidingLayout;
     private TextView categoryName;
     private TextView categoryIconImageName;
-    private TextView addCategoryButton;
-
-    public void setListenerToRootView() {}
+    private ImageView addCategoryButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,17 +72,16 @@ public class CategoriesFragment extends Fragment {
         categoriesAdapter.startListening();
         addCategoriesAdapter.startListening();
 
-//        setListenerToRootView();
         slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_categories);
         categoryName = (TextView) view.findViewById(R.id.category_name);
         categoryIconImageName = (TextView) view.findViewById(R.id.category_icon_name_text_view);
-        addCategoryButton = (TextView) view.findViewById(R.id.add_category_button);
+        addCategoryButton = (ImageView) view.findViewById(R.id.add_category_button);
 
         addCategoryButton.setOnClickListener(Utils.openCloseAccountPanel(slidingLayout, addCategoryButton, "categories"));
         slidingLayout.setTouchEnabled(false);
 
         Button saveCategoryButton = (Button) view.findViewById(R.id.save_category_button);
-        saveCategoryButton.setOnClickListener(insertCategoryHandler());
+        saveCategoryButton.setOnClickListener(insertCategoryHandler);
     }
 
     @Override
@@ -94,28 +92,25 @@ public class CategoriesFragment extends Fragment {
 
     /**
      * Method that handles the insertion of a new category in the database
-     * @return onClickListener
      */
-    private View.OnClickListener insertCategoryHandler(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String categoryNameString = categoryName.getText().toString();
-                String categoryImageName = categoryIconImageName.getText().toString();
+    private final View.OnClickListener insertCategoryHandler = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            String categoryNameString = categoryName.getText().toString();
+            String categoryImageName = categoryIconImageName.getText().toString();
 
-                if (categoryNameString.equals("")){
-                    Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
-                } else if (categoryImageName.equals("")) {
-                    Utils.showToast(getContext(), "Please select an image", Toast.LENGTH_SHORT);
-                }else{
-                    Category category = new Category(categoryNameString, categoryImageName);
-                    DatabaseReference accountsReference = Utils.databaseReference.child("categories");
-                    accountsReference.child(categoryNameString).setValue(category);
+            if (categoryNameString.equals("")){
+                Utils.showToast(getContext(), "Please insert a name", Toast.LENGTH_SHORT);
+            } else if (categoryImageName.equals("")) {
+                Utils.showToast(getContext(), "Please select an image", Toast.LENGTH_SHORT);
+            }else{
+                Category category = new Category(categoryNameString, categoryImageName);
+                DatabaseReference accountsReference = Utils.databaseReference.child("categories");
+                accountsReference.child(categoryNameString).setValue(category);
 
-                    Utils.closeKeyboard(v);
-                    Utils.closePanel(slidingLayout, addCategoryButton);
-                }
+                Utils.closeKeyboard(v);
+                Utils.closePanel(slidingLayout, addCategoryButton);
             }
-        };
-    }
+        }
+    };
 }
